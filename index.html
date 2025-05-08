@@ -1,636 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>大型任务包最终版中文化计划 - GTAmod中文组</title>
-  <style>
-    /* 全局样式 */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: Arial, sans-serif;
-      color: var(--text-color);
-      background: var(--bg-color);
-      overflow-x: hidden;
-      position: relative;
-      line-height: 1.7;
-      transition: all 0.3s ease;
-    }
-    
-    /* 主题变量 - 暗黑主题 */
-    :root {
-      --bg-color: #121212;
-      --card-bg: rgba(30, 30, 30, 0.8);
-      --text-color: #e0e0e0;
-      --primary-color: #00ffff;
-      --secondary-color: #ff00ff;
-      --border-color: #333;
-      --shadow-color: rgba(0,0,0,0.5);
-      --nav-bg: rgba(18, 18, 18, 0.9);
-      --table-header-bg: rgba(0, 255, 255, 0.1);
-      --table-row-even: rgba(30, 30, 30, 0.5);
-      --table-row-odd: rgba(40, 40, 40, 0.5);
-    }
-    
-    /* 重新设计的蓝白主题 */
-    .light-theme {
-      --bg-color: #f8faff;
-      --card-bg: rgba(255, 255, 255, 0.95);
-      --text-color: #2a3547;
-      --primary-color: #3a7bd5;
-      --secondary-color: #00d2ff;
-      --border-color: #d1e0ff;
-      --shadow-color: rgba(58, 123, 213, 0.1);
-      --nav-bg: rgba(248, 250, 255, 0.95);
-      --table-header-bg: rgba(58, 123, 213, 0.1);
-      --table-row-even: rgba(255, 255, 255, 0.8);
-      --table-row-odd: rgba(240, 245, 255, 0.8);
-    }
-    
-    /* 控制按钮 */
-    .control-buttons {
-      position: fixed;
-      top: 80px;
-      right: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 95;
-    }
-    
-    .control-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      color: var(--text-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 5px var(--shadow-color);
-      font-size: 16px;
-    }
-    
-    .control-btn:hover {
-      transform: scale(1.1);
-      background: var(--primary-color);
-      color: white;
-    }
-    
-    /* 主按钮 */
-    .main-buttons {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      display: flex;
-      gap: 15px;
-      z-index: 95;
-    }
-    
-    .main-btn {
-      padding: 12px 20px;
-      border-radius: 30px;
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-      color: white;
-      font-weight: bold;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      transition: all 0.3s ease;
-      border: none;
-      cursor: pointer;
-    }
-    
-    .main-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-    }
-    
-    .main-btn::before {
-      content: '';
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      background-size: contain;
-      background-repeat: no-repeat;
-    }
-    
-    .download-btn::before {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z'/%3E%3C/svg%3E");
-    }
-    
-    .source-btn::before {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'/%3E%3C/svg%3E");
-    }
-    
-    /* 表格样式 */
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 1.5rem 0;
-      font-size: 0.95rem;
-    }
-    
-    .data-table th {
-      background: var(--table-header-bg);
-      color: var(--primary-color);
-      padding: 12px 15px;
-      text-align: left;
-      font-weight: bold;
-      border-bottom: 2px solid var(--primary-color);
-    }
-    
-    .data-table td {
-      padding: 10px 15px;
-      border-bottom: 1px solid var(--border-color);
-    }
-    
-    .data-table tr:nth-child(even) {
-      background: var(--table-row-even);
-    }
-    
-    .data-table tr:nth-child(odd) {
-      background: var(--table-row-odd);
-    }
-    
-    .data-table tr:hover {
-      background: rgba(0, 0, 0, 0.05);
-    }
-    
-    .role-column {
-      color: var(--secondary-color);
-      font-weight: bold;
-    }
-    
-    /* 烟花效果 */
-    .firework {
-      position: fixed;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      pointer-events: none;
-      animation: firework-animation 1s ease-out;
-      opacity: 0;
-    }
-    
-    @keyframes firework-animation {
-      0% {
-        transform: translate(0, 0);
-        opacity: 1;
-      }
-      100% {
-        transform: translate(var(--x), var(--y));
-        opacity: 0;
-      }
-    }
-    
-    /* 霓虹灯效果基础 */
-    .neon-text {
-      text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--primary-color), 0 0 20px var(--primary-color);
-      animation: neon-flicker 1.5s infinite alternate;
-    }
-    
-    /* 粒子背景容器 */
-    #particles-js {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -2;
-      opacity: 0.3;
-    }
-
-    /* 顶部滚动条 */
-    .progress-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
-      width: 0%;
-      z-index: 100;
-      transition: width 0.2s ease;
-      box-shadow: 0 0 10px var(--primary-color);
-    }
-
-    /* 导航栏 */
-    .sticky-nav {
-      position: sticky;
-      top: 0;
-      background: var(--nav-bg);
-      backdrop-filter: blur(10px);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-      z-index: 90;
-      border-bottom: 1px solid var(--border-color);
-      animation: fadeInDown 0.8s ease;
-      box-shadow: 0 5px 20px var(--shadow-color);
-    }
-    .nav-logo {
-      font-weight: bold;
-      font-size: 1.8rem;
-      background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
-      -webkit-background-clip: text;
-      color: transparent;
-      text-shadow: 0 0 10px rgba(0,255,255,0.5);
-      transition: all 0.3s ease;
-    }
-    .nav-logo:hover {
-      transform: scale(1.05);
-      text-shadow: 0 0 15px rgba(0,255,255,0.8);
-    }
-    .nav-links {
-      display: flex;
-      list-style: none;
-    }
-    .nav-links li {
-      margin-left: 2rem;
-      position: relative;
-    }
-    .nav-links a {
-      color: var(--text-color);
-      text-decoration: none;
-      position: relative;
-      padding: 0.5rem 0;
-      transition: all 0.3s ease;
-      font-weight: bold;
-    }
-    .nav-links a::before {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
-      transition: width 0.3s ease;
-    }
-    .nav-links a:hover {
-      color: var(--primary-color);
-      text-shadow: 0 0 10px rgba(0,255,255,0.5);
-    }
-    .nav-links a:hover::before {
-      width: 100%;
-    }
-    .nav-links a.active {
-      color: var(--primary-color);
-    }
-    .nav-links a.active::before {
-      width: 100%;
-    }
-
-    /* 封面区 */
-    .hero {
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      flex-direction: column;
-      padding: 0 2rem;
-      position: relative;
-      overflow: hidden;
-      animation: fadeIn 1.5s ease;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at center, rgba(0,255,255,0.1) 0%, rgba(0,0,0,0.9) 70%);
-      z-index: -1;
-    }
-    .light-theme .hero::before {
-      background: radial-gradient(circle at center, rgba(58, 123, 213, 0.1) 0%, rgba(248, 250, 255, 0.95) 70%);
-    }
-    .hero h1 {
-      font-size: 4rem;
-      margin-bottom: 2rem;
-      background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
-      -webkit-background-clip: text;
-      color: transparent;
-      text-shadow: 0 0 20px rgba(0,255,255,0.3);
-      animation: glitch 3s infinite, float 6s ease-in-out infinite;
-      position: relative;
-    }
-    .hero p {
-      font-size: 1.2rem;
-      max-width: 800px;
-      margin: 0 auto 2rem;
-      opacity: 0.9;
-    }
-    .scroll-indicator {
-      position: absolute;
-      bottom: 3rem;
-      width: 30px;
-      height: 50px;
-      border: 2px solid var(--primary-color);
-      border-radius: 15px;
-      animation: bounce 2s infinite;
-      box-shadow: 0 0 10px var(--primary-color);
-    }
-    .scroll-indicator::after {
-      content: '';
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      width: 6px;
-      height: 6px;
-      margin-left: -3px;
-      background: var(--secondary-color);
-      border-radius: 50%;
-      animation: scrollDown 2s infinite;
-      box-shadow: 0 0 5px var(--secondary-color);
-    }
-    .hero-decoration {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: -1;
-    }
-    .hero-decoration span {
-      position: absolute;
-      display: block;
-      background: rgba(0,255,255,0.1);
-      border: 1px solid rgba(0,255,255,0.3);
-      animation: float 10s infinite linear;
-    }
-    .light-theme .hero-decoration span {
-      background: rgba(58, 123, 213, 0.1);
-      border: 1px solid rgba(58, 123, 213, 0.3);
-    }
-
-    /* 主内容区块通用样式 */
-    .card {
-      background: var(--card-bg);
-      border-radius: 15px;
-      padding: 2.5rem;
-      margin: 3rem auto;
-      max-width: 1000px;
-      box-shadow: 0 15px 30px var(--shadow-color);
-      border: 1px solid var(--border-color);
-      opacity: 0;
-      transform: translateY(50px);
-      transition: all 0.8s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 5px;
-      background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
-    }
-    .card h2 {
-      margin-bottom: 1.5rem;
-      color: var(--primary-color);
-      position: relative;
-      display: inline-block;
-      font-size: 2rem;
-    }
-    .card h2::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 0;
-      width: 60px;
-      height: 3px;
-      background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
-      border-radius: 3px;
-    }
-    .card p {
-      margin-bottom: 1rem;
-    }
-    .card ul {
-      padding-left: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-    .card li {
-      margin-bottom: 0.5rem;
-      position: relative;
-    }
-    .card li::before {
-      content: '→';
-      color: var(--primary-color);
-      position: absolute;
-      left: -1.5rem;
-    }
-
-    /* 时间轴 */
-    .timeline {
-      position: relative;
-      max-width: 1000px;
-      margin: 3rem auto;
-      padding: 0 2rem;
-    }
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 4px;
-      height: 100%;
-      background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
-      box-shadow: 0 0 10px var(--primary-color);
-    }
-    .timeline-item {
-      width: 45%;
-      padding: 2rem;
-      position: relative;
-      margin-bottom: 2rem;
-      background: var(--card-bg);
-      border-radius: 10px;
-      box-shadow: 0 10px 20px var(--shadow-color);
-      opacity: 0;
-      transform: translateY(50px);
-      transition: all 0.8s ease;
-    }
-    .timeline-item:nth-child(odd) {
-      left: 0;
-      border-left: 4px solid var(--primary-color);
-      animation: floatLeft 1s ease forwards;
-    }
-    .timeline-item:nth-child(even) {
-      left: 55%;
-      border-right: 4px solid var(--secondary-color);
-      animation: floatRight 1s ease forwards;
-    }
-    .timeline-date {
-      font-weight: bold;
-      color: var(--primary-color);
-      margin-bottom: 1rem;
-      font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-    }
-    .timeline-date::before {
-      content: '';
-      display: inline-block;
-      width: 15px;
-      height: 15px;
-      background: var(--primary-color);
-      border-radius: 50%;
-      margin-right: 10px;
-      box-shadow: 0 0 10px var(--primary-color);
-    }
-    .timeline-item:nth-child(even) .timeline-date::before {
-      background: var(--secondary-color);
-      box-shadow: 0 0 10px var(--secondary-color);
-    }
-    .timeline-content {
-      position: relative;
-    }
-
-    /* 页脚 */
-    .neon-footer {
-      text-align: center;
-      padding: 3rem 2rem;
-      background: var(--nav-bg);
-      margin-top: 4rem;
-      position: relative;
-      font-size: 1rem;
-      animation: fadeInUp 1s ease;
-    }
-    .neon-footer::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--primary-color), var(--secondary-color), transparent);
-    }
-    .neon-footer p {
-      margin-bottom: 1rem;
-      font-size: 1.2rem;
-    }
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      list-style: none;
-      margin-top: 1.5rem;
-    }
-    .footer-links li {
-      margin: 0 1rem;
-    }
-    .footer-links a {
-      color: var(--text-color);
-      text-decoration: none;
-      transition: all 0.3s ease;
-    }
-    .footer-links a:hover {
-      color: var(--primary-color);
-      text-shadow: 0 0 10px rgba(0,255,255,0.5);
-    }
-
-    /* 动画关键帧 */
-    @keyframes neon-flicker {
-      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--primary-color), 0 0 20px var(--primary-color);
-      }
-      20%, 24%, 55% {        
-        text-shadow: none;
-      }
-    }
-    @keyframes glitch {
-      0%, 100% { transform: translate(0); }
-      20% { transform: translate(-3px, 3px); }
-      40% { transform: translate(-3px, -3px); }
-      60% { transform: translate(3px, 3px); }
-      80% { transform: translate(3px, -3px); }
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
-    }
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(10px); }
-    }
-    @keyframes scrollDown {
-      0% { opacity: 1; transform: translateY(0); }
-      100% { opacity: 0; transform: translateY(20px); }
-    }
-    @keyframes floatLeft {
-      to { opacity: 1; transform: translateX(0) translateY(0); }
-    }
-    @keyframes floatRight {
-      to { opacity: 1; transform: translateX(0) translateY(0); }
-    }
-    @keyframes decorationFloat {
-      0% { transform: translateY(0) rotate(0deg); }
-      100% { transform: translateY(-100vh) rotate(360deg); }
-    }
-
-    /* 响应式设计 */
-    @media (max-width: 768px) {
-      .hero h1 {
-        font-size: 2.5rem;
-      }
-      .nav-links {
-        display: none;
-      }
-      .timeline::before {
-        left: 30px;
-      }
-      .timeline-item {
-        width: calc(100% - 60px);
-        padding: 1.5rem;
-      }
-      .timeline-item:nth-child(even) {
-        left: 30px;
-      }
-      .card {
-        padding: 1.5rem;
-        margin: 1.5rem auto;
-      }
-      .control-buttons {
-        top: 70px;
-        right: 10px;
-      }
-      .main-buttons {
-        bottom: 20px;
-        right: 20px;
-        flex-direction: column;
-      }
-      .data-table {
-        font-size: 0.85rem;
-      }
-      .data-table th, .data-table td {
-        padding: 8px 10px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -643,7 +18,6 @@
 <!-- 控制按钮 -->
 <div class="control-buttons">
   <button id="theme-toggle" class="control-btn" title="切换主题">🌓</button>
-  <button id="lang-toggle" class="control-btn" title="简繁切换">简/繁</button>
 </div>
 
 <!-- 主按钮 -->
@@ -652,15 +26,8 @@
   <a href="#source" class="main-btn source-btn">源代码</a>
 </div>
 
-<!-- 导航栏 -->
 <nav class="sticky-nav">
   <div class="nav-logo">Big Mission Pack</div>
-  <ul class="nav-links">
-    <li><a href="#overview" class="active">补丁概况</a></li>
-    <li><a href="#history">汉化历程</a></li>
-    <li><a href="#members">参与成员</a></li>
-    <li><a href="#install">安装指南</a></li>
-  </ul>
 </nav>
 
 <!-- 封面 -->
@@ -680,243 +47,314 @@
 
 <!-- 主体内容 -->
 <main>
-  <section id="overview" class="card">
-    <h2>补丁概况</h2>
-    
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>项目</th>
-          <th>详情</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="role-column">补丁版本</td>
-          <td>Release Version 5.0</td>
-        </tr>
-        <tr>
-          <td class="role-column">汉化组织</td>
-          <td>虚无汉化组 & GTAmod中文组</td>
-        </tr>
-        <tr>
-          <td class="role-column">更新日期</td>
-          <td>2025/??/??</td>
-        </tr>
-        <tr>
-          <td class="role-column">兼容平台</td>
-          <td>Windows PC</td>
-        </tr>
-        <tr>
-          <td class="role-column">游戏版本</td>
-          <td>ReVC Big Mission Pack Final</td>
-        </tr>
-      </tbody>
-    </table>
-    
-    <h3 style="color: var(--secondary-color); margin-top: 2rem;">前言</h3>
-    <p>2022年，UP主the寒秋策划汉化此MOD，同年7月，B站UP主Okami丶鬼道发布了关于此MOD的影片。</p>
-    <p>8月，公测版BMP汉化基本完成，开始公测。由于技术人员的调整，汉化补丁进行大量修改，并正常发布。</p>
-    <p>11月，MOD作者更新 汤米梦境 等15+个任务。</p>
-    <p>2024年5月，作者发布最终版，相对原先增加超过40个任务，同时几乎为所有主线任务添加了配音以及剧情对话。</p>
-    <p>原版VC只支持总共120个任务，但MOD任务数量远超此范围，因此作者转战ReVC上进行开发。</p>
-    <p>ReVC、大量剧情对话导致文本出现巨大变化，原先的汉化已无法兼容，且文本量极大。</p>
-  </section>
-
-  <section id="history" class="card">
-    <h2>汉化历程</h2>
-    <div class="timeline">
-      <div class="timeline-item">
-        <div class="timeline-date">2022/07/14</div>
-        <div class="timeline-content">
-          <p>老寒秋着手大型任务包（旧版）汉化计划，使用FXT外接文本。</p>
-          <p>此时汉化计划仅老寒秋、琳芙物语参与，于是发布招募公告。</p>
-        </div>
-      </div>
-      
-      <div class="timeline-item">
-        <div class="timeline-date">2022/08/09</div>
-        <div class="timeline-content">
-          <p>重要成员Mrs_Anna因长时间参与汉化工作，心肌梗塞抢救无效死亡。请致以最崇高的敬意。</p>
-        </div>
-      </div>
-      
-      <div class="timeline-item">
-        <div class="timeline-date">2022/08/10</div>
-        <div class="timeline-content">
-          <p>用户"老陈郡"谩骂、攻击、诋毁汉化组，侮辱逝者，还提出了对汉化组的"质疑"。</p>
-        </div>
-      </div>
-      
-      <div class="timeline-item">
-        <div class="timeline-date">2023/07/14</div>
-        <div class="timeline-content">
-          <p>丧心病狂版VC汉化推出的同时，基于罪吧汉化的BMP（GTAVC）由GTAmod中文组发布。</p>
-          <p>至此，历时一年（2022.7.14～2023.7.14）的GTAVC上的大型任务包汉化计划（PC）结束。</p>
-        </div>
-      </div>
-      
-      <div class="timeline-item">
-        <div class="timeline-date">2025/02/06</div>
-        <div class="timeline-content">
-          <p>正式开始ReVC 大型任务包最终版中文化计划。</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="members" class="card">
-    <h2>参与成员</h2>
-    
-    <h3 style="color: var(--secondary-color); margin-top: 1.5rem;">原虚无汉化组的参与成员</h3>
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>角色</th>
-          <th>成员</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="role-column">汉化策划</td>
-          <td>the寒秋</td>
-        </tr>
-        <tr>
-          <td class="role-column">汉化审核</td>
-          <td>朽木自雕、右小天</td>
-        </tr>
-        <tr>
-          <td class="role-column">技术支持</td>
-          <td>倾城_剑舞、琳芙物语、B1ue Micr0、Lzh10_慕黑</td>
-        </tr>
-        <tr>
-          <td class="role-column">文本翻译</td>
-          <td>Mrs_Anna、HS_宜年、咕咕的水星、RWintheVC、Mickey元老、馒头、CJCP、天骄</td>
-        </tr>
-        <tr>
-          <td class="role-column">文本润色</td>
-          <td>RWintheVC、U.S.S.R.Sakula</td>
-        </tr>
-        <tr>
-          <td class="role-column">游戏测试</td>
-          <td>VercettiSR、RWintheVC、火星鸽鸽子、馒头、Mr Lonely、Lzh10_慕黑</td>
-        </tr>
-      </tbody>
-    </table>
-    
-    <h3 style="color: var(--secondary-color); margin-top: 2.5rem;">现GTAmod中文组的新参与人员</h3>
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>角色</th>
-          <th>成员</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="role-column">技术支持</td>
-          <td>瘋人院院长</td>
-        </tr>
-        <tr>
-          <td class="role-column">文本处理</td>
-          <td>mctc、LCPD-Official、推理迷4869</td>
-        </tr>
-        <tr>
-          <td class="role-column">游戏测试</td>
-          <td>黄桃不红温、Zxz加希洛小柴</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section id="install" class="card">
-    <h2>安装指南</h2>
-    
-    <div class="steps">
-      <div class="step">
-        <div class="step-title">第一步：复制文件</div>
-        <div class="step-detail">
-          <p>将压缩文档内所有文件全部复制至游戏目录（即含有 gta_vc.exe 的文件夹）</p>
-          <p>若无法找到你的游戏目录，请打开"此电脑" > 单击右上角"在 此电脑 中搜索" > 键入"gta_vc.exe"进行搜索</p>
-        </div>
-      </div>
-      
-      <div class="step">
-        <div class="step-title">第二步：替换文件</div>
-        <div class="step-detail">
-          <p>在复制过程中弹出的所有提示："目标已包含一个名为'XXX'的文件"，均点击"替换目标中的文件(R)"</p>
-        </div>
-      </div>
-      
-      <div class="step">
-        <div class="step-title">第三步：验证文件</div>
-        <div class="step-detail">
-          <p>务必保证游戏目录中存在以下文件：</p>
-          <ul>
-            <li>'revc_chs_patch.dll'、'ReVc_cn.exe'</li>
-            <li>'data/CHINESE.dat'</li>
-            <li>'models/CHINESE.txd'</li>
-            <li>'TEXT/chinese.gxt'</li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="step">
-        <div class="step-title">第四步：启动游戏</div>
-        <div class="step-detail">
-          <p>安装完成，双击启动"ReVc_cn.exe"即可畅玩中文版游戏</p>
-        </div>
-      </div>
-    </div>
-    
-    <h3 style="color: var(--secondary-color); margin-top: 3rem;">卸载方法</h3>
-    <div class="steps">
-      <div class="step">
-        <div class="step-title">第一步：移除文件</div>
-        <div class="step-detail">
-          <p>移除 `revc_chs_patch.dll` 和 `ReVc_cn.exe`（或重命名）。</p>
-          <p>若文件被占用：通过任务管理器结束游戏进程后再操作。</p>
-          <p>注意：退出游戏前留意你当前的游戏进度，未保存的进度将会丢失！</p>
-        </div>
-      </div>
-      
-      <div class="step">
-        <div class="step-title">第二步：完成卸载</div>
-        <div class="step-detail">
-          <p>卸载完成，游戏将恢复为英文版游戏</p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- 内容将由Python脚本动态插入 -->
   
-  <!-- 下载和源代码部分 -->
-  <section id="download" class="card">
-    <h2>下载补丁</h2>
-    <p>请下载适用于Windows平台的汉化补丁：</p>
-    <div class="steps">
-      <div class="step">
-        <div class="step-title">PC版本</div>
-        <div class="step-detail">
-          <p>适用于Windows平台的《侠盗猎车手：罪恶都市》大型任务包最终版</p>
-          <a href="https://github.com/example/bmp-zh" class="main-btn download-btn" style="margin-top: 1rem;">下载PC版补丁</a>
-        </div>
-      </div>
-    </div>
-  </section>
+                    <section id="overview" class="card">
+                        <h1>项目名称：侠盗猎车手罪恶都市 &gt; 大型任务包最终版 中文化计划</h1>
+<p>下文中「大型任务包最终版」、「BMP」均表示「Big Mission Pack Final」模组；「ReVC」表示 罪恶都市逆向工程版本；「黑曜石汉化组」系同「虚无汉化组」存在合作关系；「创趣工作室」系为右小天所有的工作室；「虚无汉化组」系「好市民汉化组」同「剑舞汉化组」合并而成</p>
+<p><strong>本组坚决反对任何人、以任何形式进行游戏、模组倒卖！</strong></p>
+<p><strong>大型任务包汉化计划</strong></p>
+<p align="right"><b>GTAmod中文组荣誉汉化</b></p>
+<p align="right"><b>——献给逝去的Mrs_Anna</b></p>
 
-  <section id="source" class="card">
-    <h2>源代码</h2>
-    <p>汉化补丁的源代码已开源，欢迎开发者参与贡献：</p>
-    <div class="steps">
-      <div class="step">
-        <div class="step-title">GitHub仓库</div>
-        <div class="step-detail">
-          <p>访问我们的GitHub仓库获取最新源代码：</p>
-          <a href="https://github.com/example/bmp-zh" class="main-btn source-btn" style="margin-top: 1rem;">查看源代码</a>
-        </div>
-      </div>
-    </div>
-  </section>
+<table class="data-table">
+<thead>
+<tr>
+<th>补丁概况</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>补丁版本</strong></td>
+<td>Release Version 5.0</td>
+</tr>
+<tr>
+<td><strong>汉化组织</strong></td>
+<td>虚无汉化组 &amp; GTAmod中文组</td>
+</tr>
+<tr>
+<td><strong>更新日期</strong></td>
+<td>2025/??/??</td>
+</tr>
+</tbody>
+</table>
+<h2>📄「前言」</h2>
+<blockquote>
+<p>2022年，UP主the寒秋策划汉化此MOD，同年7月，B站UP主Okami丶鬼道发布了关于此MOD的影片。  </p>
+<p>8月，公测版BMP汉化基本完成，开始公测。由于技术人员的调整，汉化补丁进行大量修改，并正常发布。  </p>
+<p>11月，MOD作者更新 汤米梦境 等15+个任务。  </p>
+<p>2024年5月，作者发布最终版，相对原先增加超过40个任务，同时几乎为所有主线任务添加了配音以及剧情对话。  </p>
+<p>原版VC只支持总共120个任务，但MOD任务数量远超此范围，因此作者转战ReVC上进行开发。  </p>
+<p>ReVC、大量剧情对话导致文本出现巨大变化，原先的汉化已无法兼容，且文本量极大。  </p>
+</blockquote>
+<h3>汉化历程：</h3>
+<blockquote>
+<p><strong>2022/07/14</strong> 老寒秋着手大型任务包（旧版）汉化计划，使用FXT外接文本。<br />
+此时汉化计划仅老寒秋、琳芙物语参与，于是发布招募公告。  </p>
+<p><strong>2022/07/21</strong> 因GXT文本内存在同键不同表的文本，FXT造成内容重复，于是转用GXT并基于无名汉化补丁修改。  </p>
+<p><strong>2022/08/03</strong> 内测结束，进行公测第一版。  </p>
+<p><strong>2022/08/05</strong> Mrs_Anna建成汉化组官网xwhhz.mysxl.cn。<br />
+<em><br />
+</em><em>2022/08/09</em>* 我组发布的汉化由于未标注基于无名汉化，「无名汉化组」与「虚无汉化组」联系，并移除成员Alex。同时组内决定暂停公开汉化补丁，进入整改文本阶段。  </p>
+<p><strong>2022/08/09</strong> 重要成员Mrs_Anna因长时间参与汉化工作，心肌梗塞抢救无效死亡。请致以最崇高的敬意。<br />
+了解事件后，组内提出“做到极致”作为汉化的目标。  </p>
+<p><strong>2022/08/10</strong> 用户“老陈郡”谩骂、攻击、诋毁汉化组 ，侮辱逝者，还提出了对汉化组的“质疑”，造谣「无名汉化组」开户我们的组员。<br />
+实际上，「无名汉化组」只提醒了「虚无汉化组」需要声明汉化补丁基于「无名汉化组」，「开户」简直是无稽之谈。<br />
+此时组内全身心投入汉化，提高效率，整改文本。  </p>
+</blockquote>
+<ul>
+<li>
+<blockquote>
+<p><strong>2022/08/11</strong> 官网xwhhz.mysxl.cn停用。  </p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p><strong>2022/08/22</strong> 成员Lzh10提出修复字库的方案，“删文本、改非常用字”将近半个月的的整改文本历程终于告一段落。  </p>
+<p><strong>2022/08/29</strong> 调整汉化补丁，并发布第二版。由于直接复用无名字库，导致出现“市临心”的问题。  </p>
+<p><strong>2022/09/02</strong> Lzh10着手修正汉化，修复字库缺字错字问题，并发布第三版，汉化计划回到正轨。  </p>
+<p><strong>2022/11/03</strong> 大型任务包作者更新MOD，添加含 汤米梦境 等15+任务，汉化组对此更新汉化。  </p>
+<p><strong>2022/11/11</strong> 虚无汉化组官网 gtaapp.top 由「创趣工作室」建成，此后汉化发布页面改到该网站。  </p>
+<p><strong>2022/11/12</strong> 官网域名改为hsmhhz.xyz。  </p>
+<p><strong>2022/11/13</strong> 官网域名改为Mrs_Anna购买的hsmhhz.com。  </p>
+<p><strong>2022/12/04</strong> 我组人员朽木自雕Ping官网时，意外发现了非官方的假冒网站xwhhz.xyz，并且该假冒网站搬运了我组人员撰写的汉化发布文章，甚至疑似倒卖汉化。  </p>
+<p><strong>2022/12/14</strong> 我组发现该假冒网站持续搬运我组的最新文章，我组紧急发布反盗版声明。  </p>
+<p><strong>2022/12/21</strong> 官网统一改为由组员右小天自费购买的xwhhz.com.cn，并且汉化发布上传至pan.xwhhz.com.cn。  </p>
+</blockquote>
+<ul>
+<li>
+<blockquote>
+<p><strong>2022/12/25</strong> 「虚无汉化组」趋于解散，BMP汉化暂时交由「黑曜石汉化组」维护。<br />
+「黑曜石汉化组」对此前汉化补丁中一个任务的崩溃问题进行了修复。  </p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p><strong>2023/01/03</strong> 假冒网站xwhhz.xyz被重定向至百度百科，假冒网站事件告一段落。  </p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p><strong>2023/07/14</strong> 丧心病狂版VC汉化推出的同时，基于罪吧汉化的BMP（GTAVC）由GTAmod中文组发布。至此，历时一年（2022.7.14～2023.7.14）的GTAVC上的大型任务包汉化计划（PC）结束。  </p>
+<p><strong>2023/07/17</strong> 拇指玩汉化研究成功，Lzh10着手汉化大型任务包移动端，老寒秋参与汉化测试。<br />
+ 大型任务包只能在PC上游玩BMP一直是个遗憾，为此车冠基于移动端VC完美移植了BMP。  </p>
+<p><strong>2023/07/20</strong> 大型任务包移动端汉化大体完成并发布。</p>
+<p><strong>2024/05/19</strong> 大型任务包作者发布MOD最终版，不再支持GTAVC，在ReVC上进行开发。由于ReVC汉化的缺失，汉化很长一段时间不支持最终版。  </p>
+<p><strong>2024/06/09</strong> 瘋人院院长评论表示可进行ReVC的汉化。 </p>
+<p><strong>2025/01/24</strong> 不再基于无名汉化，自写ReVC汉化插件实现，大型任务包最终版汉化计划提上日程。  </p>
+<p><strong>2025/02/06</strong> 正式开始ReVC 大型任务包最终版中文化计划。  </p>
+</blockquote>
+<p><strong>今天，我们完整汉化了此MOD的最终版，并兼容ReVC。</strong> </p>
+<h2>🎉「关于成员」</h2>
+<ul>
+<li><strong>首先，需特别鸣谢原 虚无汉化组 的成员，为此次中文化计划有重大贡献。</strong></li>
+<li><strong>以下成员的昵称，一般为在 哔哩哔哩 所使用的用户名。</strong></li>
+</ul>
+<h3>「原虚无汉化组的参与成员」</h3>
+<table class="data-table">
+<thead>
+<tr>
+<th>角色</th>
+<th>成员</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>汉化策划</strong></td>
+<td>the寒秋</td>
+</tr>
+<tr>
+<td><strong>汉化审核</strong></td>
+<td>朽木自雕      右小天</td>
+</tr>
+<tr>
+<td><strong>技术支持</strong></td>
+<td>倾城_剑舞 琳芙物语        B1ue Micr0  Lzh10_慕黑</td>
+</tr>
+<tr>
+<td><strong>文本翻译</strong></td>
+<td>Mrs_Anna  HS_宜年       咕咕的水星   RWintheVC   Mickey元老    馒头      CJCP    天骄</td>
+</tr>
+<tr>
+<td><strong>文本润色</strong></td>
+<td>RWintheVC U.S.S.R.Sakula</td>
+</tr>
+<tr>
+<td><strong>游戏测试</strong></td>
+<td>VercettiSR    RWintheVC   火星鸽鸽子   馒头      Mr Lonely       Lzh10_慕黑</td>
+</tr>
+<tr>
+<td><strong>后期修正</strong></td>
+<td>the寒秋     RWintheVC   右小天     Lzh10_慕黑</td>
+</tr>
+<tr>
+<td><strong>特别鸣谢</strong></td>
+<td>Mrs_Anna  Okami丶鬼道    一只毛子球   菜菜伟</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>我们也特别感谢为此次大型任务包最终版注入新动力的新成员，下面仅写出新加入成员，老成员在上文写出。</strong></li>
+</ul>
+<h3>「现GTAmod中文组的新参与人员」</h3>
+<table class="data-table">
+<thead>
+<tr>
+<th>角色</th>
+<th>成员</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>技术支持</strong></td>
+<td>瘋人院院长</td>
+</tr>
+<tr>
+<td><strong>文本处理</strong></td>
+<td>mctc      LCPD-Official   推理迷4869</td>
+</tr>
+<tr>
+<td><strong>游戏测试</strong></td>
+<td>黄桃不红温 Zxz加希洛小柴</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>对于接手BMP汉化的「黑曜石汉化组」，我们同样表示鸣谢。    </li>
+</ul>
+<table class="data-table">
+<thead>
+<tr>
+<th>角色</th>
+<th>成员</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>汉化组长</strong></td>
+<td>咕咕的水星</td>
+</tr>
+<tr>
+<td><strong>文本处理</strong></td>
+<td>咕咕的水星 火星鸽鸽子</td>
+</tr>
+</tbody>
+</table>
+<h2>🎤「成员感言」</h2>
+<p>X<br />
+X  </p>
+<ul>
+<li><strong>除此之外，我们感谢所有支持者！</strong></li>
+</ul>
+<h2>⚡「安装方法」</h2>
+<h3>安装方法：</h3>
+<p>1.<strong>将压缩文档内所有文件全部复制至游戏目录（即含有 gta_vc.exe 的文件夹）</strong>        </p>
+<blockquote>
+<p>若无法找到你的游戏目录，请打开“<code>此电脑</code>”&gt;单击右上角“<code>在 此电脑 中搜索</code>”&gt;键入“<code>gta_vc.exe</code>”进行搜索   </p>
+<p>搜索到此文件，双击运行以确保是“<code>侠盗猎车手：罪恶都市 &gt; 大型任务包最终版</code>”游戏   </p>
+<p>确保为正确的游戏目录，即可进行“<code>1.</code>”操作      </p>
+</blockquote>
+<p>2.<strong>在复制过程中弹出的所有提示：“<code>目标已包含一个名为‘XXX’的文件</code>”，均点击“<code>替换目标中的文件（R）</code>”</strong><br />
+3.<strong>务必保证游戏目录中存在</strong>   </p>
+<blockquote>
+<ul>
+<li>‘<code>revc_chs_patch.dll</code>’、‘<code>ReVc_cn.exe</code>’  </li>
+<li>‘<code>data/CHINESE.dat</code>’  </li>
+<li>‘<code>models/CHINESE.txd</code>’    </li>
+<li>‘<code>TEXT/chinese.gxt</code>’     </li>
+</ul>
+</blockquote>
+<p>4.<strong>安装完成，双击启动“<code>ReVc_cn.exe</code>”即可畅玩中文版游戏</strong>  </p>
+<h3>卸载方法：</h3>
+<p>1.<strong>移除 <code>revc_chs_patch.dll</code> 和 <code>ReVc_cn.exe</code>（或重命名）。</strong>    </p>
+<blockquote>
+<p>若文件被占用：通过任务管理器结束游戏进程后再操作。  </p>
+<p>注意：退出游戏前留意你当前的游戏进度，未保存的进度将会丢失！ </p>
+</blockquote>
+<p>2.<strong>卸载完成，游戏将恢复为英文版游戏</strong>  </p>
+<h2>❗「特别声明」</h2>
+<ul>
+<li><strong>外网大型MOD 大型任务包最终版 我组在汉化初期就与原作者 Axirion 联系，Axirion 已同意我组进行汉化，请勿以此散播不实信息。</strong>  </li>
+<li>原版MOD网址：      https://www.moddb.com/mods/vice-city-big-mission-pack  </li>
+<li>原模组作者(Axirion)邮箱： <a href="mailto:bigmissionpack@gmail.com">bigmissionpack@gmail.com</a>  </li>
+<li>本补丁完全免费！若遭遇付费购买，请举报至：  <br />
+<a href="mailto:235810290@qq.com">235810290@qq.com</a><br />
+<a href="mailto:lzh1029384756@outlook.com">lzh1029384756@outlook.com</a></li>
+</ul>
+<h2>「关于模组」</h2>
+<ul>
+<li>
+<p><strong>下文为原版<code>ReadMe.txt</code>翻译摘要，仅供参考。如有所需，请见压缩文档内的<code>ReadMe.txt</code>正本。</strong>  </p>
+<hr />
+<p>《罪恶都市大型任务模组 (reVC)》</p>
+<p>作者：Axirion<br />
+联系邮箱：<a href="mailto:bigmissionpack@gmail.com">bigmissionpack@gmail.com</a>  </p>
+<p>安装指南：<br />
+    1) 将「[EXTRACT FILES TO VC ROOT FOLDER]」文件夹内所有文件解压至《GTA 罪恶都市》根目录<br />
+    2) 运行 reVC.exe（路径：GTA Vice City&gt;reVC.exe）<br />
+    3) 开启新游戏<br />
+    4) 尽享游戏！  </p>
+<p>核心特性：<br />
+    ◆ 兼容原版游戏，无需CLEO/ASI插件<br />
+    ◆ 存档路径：GTA Vice City&gt;userfiles&gt;GTAVCsfN.b<br />
+    ◆ 游戏设置异常时，可手动编辑ini文件（路径：GTA Vice City&gt;reVC.ini）<br />
+    ◆ 北点商场闪退解决方案：在「显示设置」中重置「行人密度」至默认值（主菜单&gt;选项&gt;显示设置&gt;行人密度 或 恢复默认）  </p>
+<p>资源导航：<br />
+    ▶ 官方YouTube频道：<br />
+    https://www.youtube.com/channel/UCLl6gKhKXaIwBIS65DLjCQA<br />
+    ▶ MODDB页面：<br />
+    https://www.moddb.com/mods/vice-city-big-mission-pack<br />
+    ▶ GTAInside页面：<br />
+    https://www.gtainside.com/en/vicecity/mods/164635-vice-city-big-mission-pack-v1-0/  </p>
+<p>开发团队：<br />
+    ✎ 文本润色：EnglishBen<br />
+    https://www.twitch.tv/english_ben<br />
+    ✓ 测试人员：thedriverbest, Hatem Khaled<br />
+    ⚙ reVC.exe优化：Cowboy69<br />
+    https://libertycity.net/user/Cowboy69/  </p>
+<hr />
+<ul>
+<li><strong>下文为该MOD的常见问题及解决方案，仅供参考。</strong></li>
+</ul>
+</li>
+</ul>
+<h3>「长按TAB键的任务选择器」</h3>
+<pre><code>此功能为长按TAB键，通过选定任务ID进入对应任务，但并非所有ID都正常对应，如  
+    ▶ 0、2、3、13、14、16、17、18、19、20、21、29、30、116、117、118、119
+    - 若选定以上ID，则游戏可能出现 【游戏崩溃 / 任务失败 / 无事发生】
+
+此外，由于MOD存在任务检查点机制，任务通过后，选择器会从最近检查点继续，而非重新开始。
+</code></pre>
+<h2>「特别鸣谢」</h2>
+<blockquote>
+<p>感谢「创趣工作室」对汉化补丁发布提供支持  </p>
+<p>感谢「黑曜石汉化组」对汉化补丁提供维护  </p>
+<p>感谢<code>GitHub</code>、<code>Cloudflare</code>提供网站服务 </p>
+<p>感谢gtamodx提供下载服务  </p>
+<p>感谢MOD原作者的倾情呈现  </p>
+<p>感谢使用我们汉化作品的伙伴  </p>
+</blockquote>
+                    </section>
+                    
+                    <section id="download" class="card">
+                        <h2>下载补丁</h2>
+<p>请下载适用于Windows平台的汉化补丁：</p>
+<h3>PC版本</h3>
+<p>适用于Windows平台的《侠盗猎车手：罪恶都市》大型任务包最终版</p>
+<p><a class="main-btn download-btn" href="https://github.com/example/bmp-zh">下载PC版补丁</a></p>
+
+                    </section>
+                    <section id="source" class="card">
+                        
+
+<h2>源代码</h2>
+<p>汉化补丁的源代码已开源，欢迎开发者参与贡献：</p>
+<h3>GitHub仓库</h3>
+<p>访问我们的GitHub仓库获取最新源代码：</p>
+<p><a class="main-btn source-btn" href="https://github.com/example/bmp-zh">查看源代码</a></p>
+                    </section>
+                    
 </main>
 
 <!-- 页脚 -->
@@ -933,275 +371,9 @@
 </footer>
 
 <!-- 引入粒子效果库 -->
-<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
 <!-- 自定义脚本 -->
-<script>
-  // 简繁转换数据
-  const simplifiedToTraditional = {
-    // 补丁概况
-    "补丁概况": "補丁概況",
-    "补丁版本": "補丁版本",
-    "汉化组织": "漢化組織",
-    "更新日期": "更新日期",
-    "兼容平台": "兼容平台",
-    "游戏版本": "遊戲版本",
-    "前言": "前言",
-    
-    // 汉化历程
-    "汉化历程": "漢化歷程",
-    "老寒秋": "老寒秋",
-    "琳芙物语": "琳芙物語",
-    "招募公告": "招募公告",
-    "心肌梗塞": "心肌梗塞",
-    "抢救无效死亡": "搶救無效死亡",
-    "致以最崇高的敬意": "致以最崇高的敬意",
-    "谩骂": "謾罵",
-    "攻击": "攻擊",
-    "诋毁": "詆毀",
-    "侮辱": "侮辱",
-    "质疑": "質疑",
-    
-    // 参与成员
-    "参与成员": "參與成員",
-    "原虚无汉化组的参与成员": "原虛無漢化組的參與成員",
-    "现GTAmod中文组的新参与人员": "現GTAmod中文組的新參與人員",
-    "汉化策划": "漢化策劃",
-    "汉化审核": "漢化審核",
-    "技术支持": "技術支持",
-    "文本翻译": "文本翻譯",
-    "文本润色": "文本潤色",
-    "游戏测试": "遊戲測試",
-    
-    // 安装指南
-    "安装指南": "安裝指南",
-    "第一步：复制文件": "第一步：複製文件",
-    "将压缩文档内所有文件全部复制至游戏目录": "將壓縮文檔內所有文件全部複製至遊戲目錄",
-    "此电脑": "此電腦",
-    "搜索": "搜索",
-    "第二步：替换文件": "第二步：替換文件",
-    "替换目标中的文件": "替換目標中的文件",
-    "第三步：验证文件": "第三步：驗證文件",
-    "务必保证": "務必保證",
-    "第四步：启动游戏": "第四步：啟動遊戲",
-    "卸载方法": "卸載方法",
-    "第一步：移除文件": "第一步：移除文件",
-    "文件被占用": "文件被佔用",
-    "任务管理器": "任務管理器",
-    "结束游戏进程": "結束遊戲進程",
-    "未保存的进度将会丢失": "未保存的進度將會丟失",
-    "第二步：完成卸载": "第二步：完成卸載",
-    
-    // 下载和源代码
-    "下载补丁": "下載補丁",
-    "源代码": "源代碼",
-    "适用于Windows平台的《侠盗猎车手：罪恶都市》大型任务包最终版": "適用於Windows平台的《俠盜獵車手：罪惡都市》大型任務包最終版",
-    "GitHub仓库": "GitHub倉庫",
-    "访问我们的GitHub仓库获取最新源代码": "訪問我們的GitHub倉庫獲取最新源代碼",
-    "查看源代码": "查看源代碼",
-    
-    // 页脚
-    "严禁倒卖": "嚴禁倒賣",
-    "本补丁完全免费": "本補丁完全免費",
-    "若遭遇付费购买": "若遭遇付費購買",
-    "举报至": "舉報至",
-    "返回顶部": "返回頂部",
-    "特别声明": "特別聲明",
-    "关于模组": "關於模組"
-  };
-
-  // 主题切换功能
-  const themeToggle = document.getElementById('theme-toggle');
-  themeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('light-theme');
-    createFirework(themeToggle);
-  });
-
-  // 简繁切换功能
-  const langToggle = document.getElementById('lang-toggle');
-  let isTraditional = false;
-  
-  langToggle.addEventListener('click', () => {
-    isTraditional = !isTraditional;
-    createFirework(langToggle);
-    
-    // 切换按钮文字
-    langToggle.textContent = isTraditional ? '繁/简' : '简/繁';
-    
-    // 遍历所有文本节点进行替换
-    const walker = document.createTreeWalker(
-      document.body,
-      NodeFilter.SHOW_TEXT,
-      null,
-      false
-    );
-    
-    let node;
-    while (node = walker.nextNode()) {
-      if (node.parentNode.tagName !== 'SCRIPT' && node.parentNode.tagName !== 'STYLE') {
-        let text = node.nodeValue;
-        if (isTraditional) {
-          // 简转繁
-          for (const [simplified, traditional] of Object.entries(simplifiedToTraditional)) {
-            text = text.replace(new RegExp(simplified, 'g'), traditional);
-          }
-        } else {
-          // 繁转简
-          for (const [simplified, traditional] of Object.entries(simplifiedToTraditional)) {
-            text = text.replace(new RegExp(traditional, 'g'), simplified);
-          }
-        }
-        node.nodeValue = text;
-      }
-    }
-  });
-
-  // 烟花效果函数
-  function createFirework(element) {
-    const rect = element.getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
-    
-    // 创建50个烟花粒子
-    for (let i = 0; i < 50; i++) {
-      const firework = document.createElement('div');
-      firework.classList.add('firework');
-      firework.style.left = `${x}px`;
-      firework.style.top = `${y}px`;
-      firework.style.backgroundColor = getRandomColor();
-      
-      // 随机方向和距离
-      const angle = Math.random() * Math.PI * 2;
-      const distance = Math.random() * 100 + 50;
-      const xOffset = Math.cos(angle) * distance;
-      const yOffset = Math.sin(angle) * distance;
-      
-      firework.style.setProperty('--x', `${xOffset}px`);
-      firework.style.setProperty('--y', `${yOffset}px`);
-      
-      document.body.appendChild(firework);
-      
-      // 动画结束后移除元素
-      setTimeout(() => {
-        firework.remove();
-      }, 1000);
-    }
-  }
-
-  function getRandomColor() {
-    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
-    return colors[Math.floor(Math.random() * colors.length)];
-  }
-
-  // 主按钮点击效果
-  document.querySelectorAll('.main-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      createFirework(btn);
-    });
-  });
-
-  // 进度条滚动
-  window.addEventListener('scroll', () => {
-    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const progress = (scrollTop / scrollHeight) * 100;
-    document.querySelector('.progress-bar').style.width = progress + '%';
-  });
-
-  // 导航栏高亮
-  const sections = document.querySelectorAll('section');
-  const navLinks = document.querySelectorAll('.nav-links a');
-  
-  window.addEventListener('scroll', () => {
-    let current = '';
-    
-    sections.forEach(section => {
-      const sectionTop = section.offsetTop;
-      const sectionHeight = section.clientHeight;
-      
-      if (pageYOffset >= sectionTop - 300) {
-        current = section.getAttribute('id');
-      }
-    });
-    
-    navLinks.forEach(link => {
-      link.classList.remove('active');
-      if (link.getAttribute('href') === `#${current}`) {
-        link.classList.add('active');
-      }
-    });
-  });
-
-  // 元素滚动显现
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = 1;
-        entry.target.style.transform = 'translateY(0)';
-      }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.card, .timeline-item').forEach(item => {
-    observer.observe(item);
-  });
-
-  // 初始化粒子背景
-  particlesJS('particles-js', {
-    particles: {
-      number: { value: 80, density: { enable: true, value_area: 800 } },
-      color: { value: ['#00ffff', '#ff00ff'] },
-      shape: { type: 'circle' },
-      opacity: { value: 0.5, random: true },
-      size: { value: 3, random: true },
-      line_linked: { 
-        enable: true, 
-        distance: 150, 
-        color: '#ffffff', 
-        opacity: 0.2, 
-        width: 1 
-      },
-      move: { 
-        enable: true, 
-        speed: 2, 
-        direction: 'none', 
-        random: true, 
-        straight: false, 
-        out_mode: 'out', 
-        bounce: false 
-      }
-    },
-    interactivity: {
-      detect_on: 'canvas',
-      events: {
-        onhover: { enable: true, mode: 'repulse' },
-        onclick: { enable: true, mode: 'push' }
-      },
-      modes: {
-        repulse: { distance: 100, duration: 0.4 },
-        push: { particles_nb: 4 }
-      }
-    },
-    retina_detect: true
-  });
-
-  // 添加装饰元素动画
-  function createDecorations() {
-    const decoration = document.querySelector('.hero-decoration');
-    for (let i = 0; i < 10; i++) {
-      const span = document.createElement('span');
-      span.style.width = `${Math.random() * 15 + 5}px`;
-      span.style.height = span.style.width;
-      span.style.top = `${Math.random() * 100}%`;
-      span.style.left = `${Math.random() * 100}%`;
-      span.style.animationDelay = `${Math.random() * 10}s`;
-      span.style.animationDuration = `${Math.random() * 20 + 10}s`;
-      decoration.appendChild(span);
-    }
-  }
-  
-  createDecorations();
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
