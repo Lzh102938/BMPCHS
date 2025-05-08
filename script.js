@@ -1,32 +1,56 @@
 document.addEventListener('DOMContentLoaded', function() {
+  // 确保DOM已完全加载
+  if (document.readyState === 'complete') {
+    initPage();
+  } else {
+    window.addEventListener('load', initPage);
+  }
+});
+
+function initPage() {
   // ================= 粒子系统初始化 =================
+  // 加载粒子配置
   particlesJS.load('particles-js', 'particles.json', function() {
     console.log('粒子系统已加载');
   });
 
+  // 主题切换
   const themeToggle = document.getElementById('theme-toggle');
-  themeToggle.addEventListener('click', function() {
-    document.body.classList.toggle('light-theme');
-    createFirework(this);
-  });
-
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function() {
+      document.body.classList.toggle('light-theme');
+      createFirework(this);
+    });
+  }
 
   // ================= 全局水波纹效果 =================
-  document.addEventListener('click', function(e) {
-    // 排除导航栏点击
-    if (e.target.closest('.nav-container')) return;
-    
+  // 水波纹效果在点击或长按时触发
+  document.addEventListener('mousedown', waterRipple);
+  document.addEventListener('touchstart', waterRipple, { passive: true });
+
+  function waterRipple(e) {
     const ripple = document.createElement('div');
     ripple.className = 'global-ripple';
-    ripple.style.left = `${e.clientX}px`;
-    ripple.style.top = `${e.clientY}px`;
+    
+    // 获取点击坐标
+    let clientX, clientY;
+    if (e.type === 'mousedown') {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    } else if (e.type === 'touchstart') {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    }
+
+    ripple.style.left = `${clientX}px`;
+    ripple.style.top = `${clientY}px`;
     
     document.body.appendChild(ripple);
     
     setTimeout(() => {
       ripple.remove();
     }, 1000);
-  });
+  }
 
   // ================= 垂直导航栏 =================
   const navContainer = document.createElement('div');
@@ -97,11 +121,30 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // ================= 邮箱自动链接 =================
+  // ================= 邮箱自动链接通用修复 =================
+  // 遍历所有文本节点并转换邮箱为链接
   document.querySelectorAll('section').forEach(section => {
-    section.innerHTML = section.innerHTML.replace(
-      /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi,
-      '<a href="mailto:$1" class="email-link">$1</a>'
-    );
+    const walker = document.createTreeWalker(section, NodeFilter.SHOW_TEXT, null, false);
+    let node;
+    while (node = walker.nextNode()) {
+      let text = node.nodeValue;
+      // 使用正则表达式匹配邮箱地址
+      const emailPattern = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
+      if (emailPattern.test(text)) {
+        // 创建一个临时div来处理HTML
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = text;
+        // 替换所有匹配的邮箱地址
+        tempDiv.innerHTML = tempDiv.innerHTML.replace(emailPattern, (match) => {
+          // 检查是否已经是链接
+          if (match.toLowerCase().includes('mailto:')) {
+            return match;
+          }
+          return `<a href="mailto:${match}" class="email-link">${match}</a>`;
+        });
+        // 替换原始文本节点
+        node.parentNode.replaceChild(tempDiv, node);
+      }
+    }
   });
-});
+}
