@@ -663,7 +663,7 @@ body {
   margin-left: -3px;
   background: var(--secondary-color);
   border-radius: 50%;
-  animation: scrollDown 2s infinite;
+  animation: scrollDown 3s infinite;
   box-shadow: 0 0 5px var(--secondary-color);
 }
 
@@ -689,23 +689,24 @@ body {
   margin-left: -3px;
   background: var(--secondary-color);
   border-radius: 50%;
-  animation: scrollDown 2s infinite;
+  animation: scrollDown 3s infinite;
   box-shadow: 0 0 5px var(--secondary-color);
 }
 
 /* 滚动指示器动画 */
+/* 定义一个名为 "breatheScrollIndicator" 的关键帧动画 */
 @keyframes breatheScrollIndicator {
   0% {
-    transform: translateY(0) scale(1);
-    opacity: 0.8;
+    opacity: 1;
+    transform: translateY(0);
   }
   50% {
-    transform: translateY(-5px) scale(1.05);
     opacity: 1;
+    transform: translateY(20px);
   }
   100% {
-    transform: translateY(0) scale(1);
-    opacity: 0.8;
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -721,16 +722,6 @@ body {
   }
 }
 
-@keyframes scrollDown {
-  0% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-}
 
 /* 装饰元素 */
 .hero-decoration {
