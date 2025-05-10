@@ -194,45 +194,39 @@ body {
   width: 20px;
   height: 20px;
   background: radial-gradient(
-    circle at center,
-    rgba(255, 255, 255, 0.5) 0%,
-    rgba(255, 255, 255, 0.1) 100%
+      circle at center,
+      #008cffb3 0%, /* 蓝色主题色 */
+      #008cff4d 40%,
+      #008cff1a 100%
   );
   border-radius: 50%;
-  animation: ripple 1.2s cubic-bezier(0.32, 0.77, 0.48, 0.74);
+  animation: ripple 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   pointer-events: none;
   z-index: 1000;
   transform: translate(-50%, -50%);
 }
 
-.ripple-affected {
-  transition: transform 0.5s ease, filter 0.3s ease;
-}
-
-.global-ripple:hover {
-  background: radial-gradient(
-    circle at center,
-    rgba(255, 255, 255, 0.7) 0%,
-    rgba(255, 255, 255, 0.2) 100%
-  );
-}
-
+/* 修改原有涟漪动画，增加颗粒混合效果 */
 @keyframes ripple {
   0% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.4));
+      transform: translate(-50%, -50%) scale(0.5);
+      opacity: 0.7;
+      filter: 
+          drop-shadow(0 0 2px rgba(0, 255, 255, 0.6))
+          blur(1px);
+  }
+  50% {
+      filter: 
+          drop-shadow(0 0 4px rgba(0, 255, 255, 0.4))
+          blur(2px);
   }
   100% {
-    transform: translate(-50%, -50%) scale(30);
-    opacity: 0;
-    filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+      transform: translate(-50%, -50%) scale(30);
+      opacity: 0;
+      filter: 
+          drop-shadow(0 0 0 rgba(0, 255, 255, 0))
+          blur(3px);
   }
-}
-
-/* 添加涟漪触发时元素轻微变形效果 */
-.ripple-initiated {
-  animation: ripple-distort 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 @keyframes ripple-distort {
@@ -1539,4 +1533,162 @@ blockquote {
   color: var(--text-color);
   font-style: italic;
   background-color: rgba(var(--primary-rgb), 0.05);
+}
+
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  /* 调整字体大小 */
+  .hero h1 {
+      font-size: 3rem;
+  }
+  .hero p {
+      font-size: 1.1rem;
+  }
+  /* 调整间距 */
+  .timeline::before {
+      left: 30px;
+  }
+  .timeline-item {
+      width: calc(100% - 80px);
+      left: 60px !important;
+      margin-left: -60px;
+  }
+  .timeline-date {
+      font-size: 1rem;
+  }
+  /* 调整表格样式 */
+  .data-table th, .data-table td {
+      padding: 0.8rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  /* 进一步调整字体大小 */
+  .hero h1 {
+      font-size: 2.5rem;
+  }
+  .hero p {
+      font-size: 1rem;
+  }
+  /* 调整卡片样式 */
+  .card {
+      padding: 1.5rem;
+  }
+  /* 调整导航栏样式 */
+  .nav-container {
+      width: 40px;
+      height: 40px;
+  }
+  /* 调整按钮样式 */
+  .main-btn {
+      padding: 10px 15px;
+      font-size: 0.9rem;
+  }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) and (orientation: landscape) {
+  /* 中型设备的样式 */
+  /* 调整字体大小 */
+  .hero h1 {
+      font-size: 3.5rem;
+  }
+  /* 调整间距 */
+  .timeline-item {
+      padding: 1.5rem;
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  /* 大型设备的样式 */
+  /* 调整字体大小 */
+  .hero h1 {
+      font-size: 4.5rem;
+  }
+  /* 调整间距 */
+  .card {
+      padding: 3rem;
+  }
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 2) {
+  /* 高DPI设备 */
+  /* 提高图片、字体等的清晰度 */
+  .nav-logo {
+      font-size: 2rem;
+  }
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  /* 系统深色模式 */
+  /* 可以在这里添加系统深色模式下的样式覆盖 */
+}
+
+@media screen and (prefers-color-scheme: light) {
+  /* 系统浅色模式 */
+  /* 可以在这里添加系统浅色模式下的样式覆盖 */
+}
+
+/* 深色主题下的导航栏和菜单样式 */
+body:not(.light-theme) {
+  --nav-bg: rgba(18, 18, 18, 0.65); /* 深色主题导航栏背景 */
+  --menu-bg: rgba(30, 30, 30, 0.6); /* 深色主题菜单背景 */
+}
+
+/* 浅色主题下的导航栏和菜单样式 */
+body.light-theme {
+  --nav-bg: rgba(240, 246, 252, 0.85); /* 浅色主题导航栏背景 */
+  --menu-bg: rgba(255, 255, 255, 0.8); /* 浅色主题菜单背景 */
+}
+
+/* 通用导航栏样式 */
+.nav-container {
+  backdrop-filter: blur(30px);
+  background-color: var(--nav-bg);
+  border-radius: 25px;
+}
+
+/* 通用导航菜单样式 */
+.nav-vertical {
+  backdrop-filter: blur(25px);
+  background-color: var(--menu-bg);
+  padding: 15px 0;
+  border-radius: 12px;
+}
+
+/* 针对小屏设备的导航栏样式 */
+@media screen and (max-width: 768px) {
+  .nav-container {
+    backdrop-filter: blur(15px);
+    background-color: var(--nav-bg);
+  }
+}
+
+/* 针对小屏设备的导航菜单样式 */
+@media screen and (max-width: 480px) {
+  .nav-container {
+    backdrop-filter: blur(10px);
+    background-color: var(--nav-bg);
+  }
+  .nav-vertical {
+    backdrop-filter: blur(15px);
+    background-color: var(--menu-bg);
+  }
+}
+
+/* 针对小屏设备的导航菜单样式 */
+@media screen and (max-width: 480px) {
+  .nav-container {
+    backdrop-filter: blur(10px);
+    background-color: var(--nav-bg);
+  }
+  .nav-vertical {
+    backdrop-filter: blur(15px);
+    background-color: var(--menu-bg);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  /* 针对手机大小的设备 */
+  .nav-container {
+      backdrop-filter: blur(10px); /* 减少小屏幕上模糊的强度 */
+  }
 }
