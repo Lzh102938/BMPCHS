@@ -30,15 +30,15 @@ body {
 }
 
 .light-theme {
-  --bg-color: #f8faff;
-  --card-bg: rgba(255, 255, 255, 0.98);
-  --text-color: #2a3547;
-  --primary-color: #3a7bd5;
-  --secondary-color: #00d2ff;
-  --border-color: #d1e0ff;
-  --shadow-color: rgba(58, 123, 213, 0.1);
-  --nav-bg: rgba(248, 250, 255, 0.95);
-  --primary-rgb: 58, 123, 213;
+  --bg-color: #f0f6fc; /* 更柔和的淡蓝色背景 */
+  --card-bg: rgba(255, 255, 255, 0.95); /* 更干净的卡片背景 */
+  --text-color: #2c3e50; /* 深度适中的文字色 */
+  --primary-color: #4a90e2; /* 饱和度更高的蓝色作为主色 */
+  --secondary-color: #63e4c8; /* 更清新的青绿色作为次色 */
+  --border-color: #d5e7f7; /* 更淡的边框色与背景协调 */
+  --shadow-color: rgba(74, 144, 226, 0.15); /* 适度的阴影色 */
+  --nav-bg: rgba(240, 246, 252, 0.9); /* 更清爽的导航栏背景 */
+  --primary-rgb: 74, 144, 226; /* 主色的RGB值 */
 }
 
 /* 粒子背景 */
@@ -193,17 +193,68 @@ body {
   position: fixed;
   width: 20px;
   height: 20px;
-  background: rgba(255, 255, 255, 0.3);
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
   border-radius: 50%;
-  animation: ripple 1s ease-out;
+  animation: ripple 1.2s cubic-bezier(0.32, 0.77, 0.48, 0.74);
   pointer-events: none;
-  z-index: 9999;
+  z-index: 1000;
+  transform: translate(-50%, -50%);
+}
+
+.ripple-affected {
+  transition: transform 0.5s ease, filter 0.3s ease;
+}
+
+.global-ripple:hover {
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
 }
 
 @keyframes ripple {
-  to {
-    transform: scale(20);
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.4));
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(30);
     opacity: 0;
+    filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+  }
+}
+
+/* 添加涟漪触发时元素轻微变形效果 */
+.ripple-initiated {
+  animation: ripple-distort 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes ripple-distort {
+  0% {
+    transform: scale(1) translate(0, 0);
+    filter: hue-rotate(0deg);
+  }
+  20% {
+    transform: scale(0.98) translate(1px, -1px);
+    filter: hue-rotate(3deg) brightness(0.98);
+  }
+  40% {
+    transform: scale(1.01) translate(-1px, 1px);
+    filter: hue-rotate(-1deg) brightness(1.02);
+  }
+  60% {
+    transform: scale(0.99) translate(0, 0);
+    filter: hue-rotate(0) brightness(1);
+  }
+  100% {
+    transform: scale(1) translate(0, 0);
+    filter: hue-rotate(0deg) brightness(1);
   }
 }
 
@@ -334,15 +385,13 @@ body {
   padding: 0.5rem 0;
   transition: all 0.3s ease;
   font-weight: bold;
+  text-shadow: none; /* 初始化阴影 */
 }
 
 .nav-links a:hover {
   color: var(--primary-color);
-  text-shadow: 0 0 10px rgba(0,255,255,0.5);
-}
-
-.nav-links a:hover::before {
-  width: 100%;
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); /* 添加发光效果 */
+  animation: neon-flicker 1.5s infinite alternate; /* 添加动画效果 */
 }
 
 .nav-links a::before {
@@ -354,6 +403,20 @@ body {
   height: 2px;
   background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
   transition: width 0.3s ease;
+}
+
+.nav-links a:hover::before {
+  width: 100%;
+}
+
+/* 彩色发光动画 */
+@keyframes neon-flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--primary-color), 0 0 20px var(--primary-color);
+  }
+  20%, 24%, 55% {        
+    text-shadow: none;
+  }
 }
 
 /* 控制按钮 */
@@ -1068,6 +1131,14 @@ body {
   position: relative;
   overflow: hidden;
   z-index: 1;
+  padding: 15px 30px;
+  border-radius: 50px;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: transform 1.2s ease;
+  cursor: pointer;
 }
 
 .main-btn::before {
@@ -1078,18 +1149,45 @@ body {
   width: 100%;
   height: 100%;
   background: linear-gradient(45deg, 
-    var(--secondary-color), 
-    var(--primary-color), 
-    var(--secondary-color));
-  background-size: 200% 200%;
+    #ffb3d9, /* 轻柔粉色 */
+    #ffd166, /* 淡黄色 */
+    #90caf9, /* 淡蓝色 */
+    #ffb3d9, /* 轻柔粉色 */
+    #ffd166, /* 淡黄色 */
+    #90caf9  /* 淡蓝色 */
+  );
+  background-size: 600% 600%;
   z-index: -1;
-  transition: all 0.4s ease;
+  transition: background-position 3.6s ease;
   opacity: 0;
+}
+
+.main-btn:hover {
+  transform: translateY(-2px);
 }
 
 .main-btn:hover::before {
   opacity: 1;
-  animation: gradientShift 2s linear infinite;
+  background-position: 100% 100%;
+  transition: background-position 4.5s ease;
+}
+
+.main-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  transition: all 1.5s ease;
+  opacity: 0;
+}
+
+.main-btn:hover::after {
+  opacity: 1;
+  transform: scale(1.05);
 }
 
 @keyframes gradientShift {
@@ -1155,15 +1253,290 @@ table:not(.data-table) tr:nth-child(even) {
 }
 
 
-/* 邮箱链接 */
+/* 链接通用样式 */
+a {
+  color: var(--primary-color); /* 使用主色作为默认链接颜色 */
+  text-decoration: none; /* 移除下划线 */
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--secondary-color); /* 悬停时变为次色 */
+}
+
+/* 邮箱链接样式 */
 .email-link {
-  color: var(--secondary-color);
-  text-decoration: none;
-  border-bottom: 1px dashed currentColor;
+  color: var(--primary-color); /* 保持与主色一致 */
+  text-decoration: none; /* 移除下划线 */
   transition: all 0.3s ease;
 }
 
 .email-link:hover {
+  color: var(--secondary-color);
+}
+
+/* URL链接样式 */
+.url-link {
   color: var(--primary-color);
-  border-bottom-style: solid;
+  text-decoration: none; /* 移除下划线 */
+  transition: all 0.3s ease;
+}
+
+.url-link:hover {
+  color: var(--secondary-color);
+}
+
+/* 底栏小字 */
+.power-by {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.power-by small {
+  font-size: 0.8em;
+  opacity: 0.7;
+}
+
+.power-by a {
+  color: #ff00ff; /* 保持霓虹色风格 */
+  text-decoration: none;
+}
+
+.power-by a:hover {
+  text-decoration: underline;
+}
+
+/* 新增图标相关样式 */
+.power-by {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.power-by small {
+  font-size: 0.8em;
+  opacity: 0.7;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.icon-link {
+  color: #00ffff;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  transition: 0.3s;
+}
+
+.icon-link:hover {
+  text-decoration: underline;
+  color: #00ffff;
+  filter: brightness(1.2);
+}
+
+/* GitHub 图标颜色修正 */
+.fa-github {
+  color: #ff00ff !important;
+}
+
+
+/* 新增框框样式 */
+.code-block {
+  display: inline-block;
+  padding: 2px 5px;
+  margin: 0 3px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px; /* 增大圆角 */
+  font-family: monospace;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+  font-size: 0.9em;
+  transition: all 0.3s ease;
+}
+
+.light-theme .code-block {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.code-block:hover {
+  background-color: rgba(var(--primary-rgb), 0.2);
+  border-color: var(--primary-color);
+}
+
+/* 定制垂直滚动条样式 */
+/* 自定义滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px; /* 滚动条宽度 */
+  height: 8px; /* 滚动条高度 */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* 滚动条轨道背景 */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); /* 滚动条滑块背景 */
+  border-radius: 4px;
+  border: 2px solid transparent; /* 滚动条滑块边框 */
+  background-clip: content-box; /* 背景裁剪到内容区域 */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, var(--secondary-color), var(--primary-color)); /* 滚动条滑块悬停背景 */
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent; /* 滚动条角落背景 */
+}
+
+/* 顶部横向进度条 */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+  width: 0%;
+  z-index: 100;
+  transition: width 0.2s ease;
+  box-shadow: 0 0 10px var(--primary-color);
+}
+
+/* 隐藏md换行标记 */
+span.permaLink {
+  display: none;
+}
+
+/* 代码块样式 */
+pre {
+  overflow-x: auto; /* 添加水平滚动条 */
+  font-family: 'Courier New', Courier, monospace; /* 等宽字体 */
+  border-radius: 16px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+code {
+  font-family: 'Courier New', Courier, monospace; /* 等宽字体 */
+  font-size: 0.9em;
+}
+
+/* Markdown中的代码块（以4个空格或制表符开头） */
+pre code {
+  display: block;
+  line-height: 1.6;
+}
+
+/* 深色主题下的代码块样式 */
+:root {
+  --code-bg-color: rgba(0, 0, 0, 0.7); /* 深色主题代码块背景 */
+  --code-color: #e0e0e0; /* 深色主题代码文字颜色 */
+  --code-border-color: #333; /* 深色主题代码块边框颜色 */
+}
+
+/* 浅色主题下的代码块样式 */
+.light-theme {
+  --code-bg-color: rgba(255, 255, 255, 0.7); /* 浅色主题代码块背景 */
+  --code-color: #333; /* 浅色主题代码文字颜色 */
+  --code-border-color: #d5e7f7; /* 浅色主题代码块边框颜色 */
+}
+
+pre {
+  background-color: var(--code-bg-color);
+  color: var(--code-color);
+  border: 1px solid var(--code-border-color);
+  box-shadow: 0 4px 6px var(--shadow-color);
+}
+
+/* 添加行号 */
+pre code {
+  counter-reset: code-line;
+  position: relative;
+  padding-left: 3em; /* 为行号预留空间 */
+}
+
+pre code::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3em;
+  height: 100%;
+  background-color: var(--code-bg-color);
+  opacity: 0.7;
+}
+
+pre code span.line::before {
+  counter-increment: code-line;
+  content: counter(code-line);
+  position: absolute;
+  left: 0;
+  width: 3em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: var(--text-color);
+  opacity: 0.6;
+  border-right: 1px solid var(--border-color);
+}
+
+/* 内联代码样式 */
+code {
+  background-color: var(--code-bg-color);
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+/* 表格中的内联代码样式 */
+table code {
+  background-color: var(--code-bg-color);
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+/* 列表样式 */
+ul {
+  margin-left: 2em; /* 增加列表左边距 */
+  list-style-type: none; /* 移除默认样式 */
+}
+
+ul li {
+  position: relative;
+  padding-left: 1.5em; /* 为自定义项目符号留出空间 */
+}
+
+ul li::before {
+  content: "•"; /* 定义项目符号为点 */
+  position: absolute;
+  left: 0;
+  color: var(--primary-color);
+  font-size: 1.2em;
+  line-height: 1;
+  top: 0.2em;
+}
+
+blockquote::before {
+  content: "“"; /* 添加左引号 */
+  font-size: 2em;
+  line-height: 0.1em;
+  vertical-align: bottom;
+  color: var(--primary-color);
+}
+
+blockquote::after {
+  content: "”"; /* 添加右引号 */
+  font-size: 2em;
+  line-height: 0.1em;
+  vertical-align: bottom;
+  color: var(--primary-color);
+}
+
+blockquote {
+  margin: 1.5em 0;
+  padding-left: 1.5em;
+  border-left: 4px solid var(--primary-color);
+  color: var(--text-color);
+  font-style: italic;
+  background-color: rgba(var(--primary-rgb), 0.05);
 }

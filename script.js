@@ -121,30 +121,88 @@ function initPage() {
     }
   });
 
-  // ================= 邮箱自动链接通用修复 =================
-  // 遍历所有文本节点并转换邮箱为链接
-  document.querySelectorAll('section').forEach(section => {
-    const walker = document.createTreeWalker(section, NodeFilter.SHOW_TEXT, null, false);
+  // ================= 邮箱和网址自动链接通用修复 =================
+  function createLinkNodes() {
+    // 使用TreeWalker遍历所有文本节点
+    const walker = document.createTreeWalker(
+      document.body, // 从整个文档开始
+      NodeFilter.SHOW_TEXT, // 只处理文本节点
+      null, // 没有过滤函数
+      false // 不扩展实体引用
+    );
+    
     let node;
     while (node = walker.nextNode()) {
-      let text = node.nodeValue;
-      // 使用正则表达式匹配邮箱地址
+      // 处理文本节点
+      const text = node.nodeValue.trim();
+      if (!text) continue; // 跳过空文本
+      
+      // 创建临时div来处理HTML
+      const tempDiv = document.createElement('div');
+      tempDiv.textContent = text;
+      
+      // 定义正则表达式
+      const urlPattern = /(https?:\/\/[^\s]+)/gi;
       const emailPattern = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
-      if (emailPattern.test(text)) {
-        // 创建一个临时div来处理HTML
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = text;
-        // 替换所有匹配的邮箱地址
-        tempDiv.innerHTML = tempDiv.innerHTML.replace(emailPattern, (match) => {
-          // 检查是否已经是链接
-          if (match.toLowerCase().includes('mailto:')) {
-            return match;
-          }
-          return `<a href="mailto:${match}" class="email-link">${match}</a>`;
-        });
+      
+      // 替换网址
+      tempDiv.innerHTML = tempDiv.innerHTML.replace(urlPattern, (match) => {
+        // 检查是否已经是链接
+        if (match.toLowerCase().includes('</a>') || match.toLowerCase().includes('<a ')) {
+          return match;
+        }
+        return `<a href="${match}" target="_blank" class="url-link">${match}</a>`;
+      });
+      
+      // 替换邮箱
+      tempDiv.innerHTML = tempDiv.innerHTML.replace(emailPattern, (match) => {
+        // 检查是否已经是链接
+        if (match.toLowerCase().includes('mailto:')) {
+          return match;
+        }
+        return `<a href="mailto:${match}" class="email-link">${match}</a>`;
+      });
+      
+      // 检查是否有任何修改
+      if (tempDiv.innerHTML !== tempDiv.textContent) {
         // 替换原始文本节点
         node.parentNode.replaceChild(tempDiv, node);
       }
     }
-  });
+  }
+
+  // 执行自动链接创建
+  createLinkNodes();
+
+  // ================= 水波纹涟漪 =================
+  function createRipple(event) {
+    const rippleContainer = document.querySelector('.ripple-container');
+    const rippleElement = document.getElementById('ripple-element');
+    
+    // 创建涟漪元素
+    const ripple = document.createElement('div');
+    ripple.classList.add('global-ripple');
+    
+    // 设置涟漪位置
+    ripple.style.left = `${event.clientX}px`;
+    ripple.style.top = `${event.clientY}px`;
+    
+    // 添加到容器
+    rippleContainer.appendChild(ripple);
+    
+    // 添加变形效果
+    rippleElement.classList.add('ripple-initiated');
+    
+    // 动画结束后移除涟漪元素
+    setTimeout(() => {
+      ripple.remove();
+      rippleElement.classList.remove('ripple-initiated');
+    }, 1200);
+    
+    // 添加涟漪后效果类
+    rippleElement.classList.add('ripple-affected');
+  }
+
+  // 监听点击事件
+  document.getElementById('ripple-element') && document.getElementById('ripple-element').addEventListener('click', createRipple);
 }
