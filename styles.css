@@ -12,7 +12,7 @@ body {
   overflow-x: hidden;
   position: relative;
   line-height: 1.7;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 统一动画曲线 */
 }
 
 /* 主题变量 */
@@ -25,20 +25,21 @@ body {
   --border-color: #333;
   --shadow-color: rgba(0,0,0,0.5);
   --nav-bg: rgba(18, 18, 18, 0.95);
-  --table-header-bg: rgba(0, 255, 255, 0.1);
+  --table-header-bg: rgba(0, 255, 255, 0.9); /* 表头背景不透明度提高 */
   --primary-rgb: 0, 255, 255;
 }
 
 .light-theme {
-  --bg-color: #f0f6fc; /* 更柔和的淡蓝色背景 */
-  --card-bg: rgba(255, 255, 255, 0.95); /* 更干净的卡片背景 */
-  --text-color: #2c3e50; /* 深度适中的文字色 */
-  --primary-color: #4a90e2; /* 饱和度更高的蓝色作为主色 */
-  --secondary-color: #63e4c8; /* 更清新的青绿色作为次色 */
-  --border-color: #d5e7f7; /* 更淡的边框色与背景协调 */
-  --shadow-color: rgba(74, 144, 226, 0.15); /* 适度的阴影色 */
-  --nav-bg: rgba(240, 246, 252, 0.9); /* 更清爽的导航栏背景 */
-  --primary-rgb: 74, 144, 226; /* 主色的RGB值 */
+  --bg-color: #f0f6fc;
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --text-color: #2c3e50;
+  --primary-color: #4a90e2;
+  --secondary-color: #63e4c8;
+  --border-color: #d5e7f7;
+  --shadow-color: rgba(74, 144, 226, 0.15);
+  --nav-bg: rgba(240, 246, 252, 0.9);
+  --table-header-bg: rgba(74, 144, 226, 0.95); /* 浅色主题表头优化 */
+  --primary-rgb: 74, 144, 226;
 }
 
 /* 粒子背景 */
@@ -64,11 +65,12 @@ body {
   width: 50px;
   height: 50px;
   background: var(--nav-bg);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(3px);
   border-radius: 25px;
   box-shadow: 0 5px 15px var(--shadow-color);
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 统一动画曲线 */
   overflow: hidden;
+  transform-origin: top right; /* 设置变换原点 */
 }
 
 .nav-container.expanded {
@@ -76,6 +78,7 @@ body {
   height: auto;
   max-height: 80vh;
   border-radius: 12px;
+  transform: scale(1); /* 展开时的缩放 */
 }
 
 .nav-header {
@@ -90,26 +93,51 @@ body {
 .nav-icon::before {
   content: "☰";
   font-size: 1.5rem;
-  transition: transform 0.3s ease;
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 统一动画曲线 */
 }
 
 .nav-container.expanded .nav-icon::before {
-  transform: rotate(90deg);
+  transform: rotate(90deg) scale(1.2); /* 旋转并略微放大 */
 }
 
 .nav-vertical {
   list-style: none;
-  padding: 0 15px;
+  padding: 0 15px 15px;
   margin: 0;
   max-height: calc(80vh - 70px);
   overflow-y: auto;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transform: translateY(10px); /* 初始位置下移 */
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 统一动画曲线 */
+  transition-delay: 0.1s; /* 延迟显示 */
 }
 
 .nav-container.expanded .nav-vertical {
   opacity: 1;
+  transform: translateY(0); /* 恢复正常位置 */
 }
+
+.nav-vertical li {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 统一动画曲线 */
+}
+
+.nav-container.expanded .nav-vertical li {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 为菜单项添加交错动画 */
+.nav-container.expanded .nav-vertical li:nth-child(1) { transition-delay: 0.15s; }
+.nav-container.expanded .nav-vertical li:nth-child(2) { transition-delay: 0.2s; }
+.nav-container.expanded .nav-vertical li:nth-child(3) { transition-delay: 0.25s; }
+.nav-container.expanded .nav-vertical li:nth-child(4) { transition-delay: 0.3s; }
+.nav-container.expanded .nav-vertical li:nth-child(5) { transition-delay: 0.35s; }
+.nav-container.expanded .nav-vertical li:nth-child(6) { transition-delay: 0.4s; }
+.nav-container.expanded .nav-vertical li:nth-child(7) { transition-delay: 0.45s; }
+.nav-container.expanded .nav-vertical li:nth-child(8) { transition-delay: 0.5s; }
+.nav-container.expanded .nav-vertical li:nth-child(9) { transition-delay: 0.55s; }
 
 .nav-vertical a {
   color: var(--text-color);
@@ -120,6 +148,7 @@ body {
   border-radius: 6px;
   transition: all 0.3s ease;
   position: relative;
+  overflow: hidden;
 }
 
 .nav-vertical a::before {
@@ -137,12 +166,44 @@ body {
 .nav-vertical a:hover {
   background: rgba(var(--primary-rgb), 0.08);
   padding-left: 18px;
+  transform: translateX(-5px); /* 悬停时轻微移动 */
 }
 
 .nav-vertical a:hover::before,
 .nav-vertical a.active::before {
   transform: scaleY(1);
+}  
+
+/* 菜单收起时的样式 */
+.nav-container:not(.expanded) .nav-vertical {
+  opacity: 0;
+  transform: translateY(10px);
+  transition-delay: 0s; /* 收起时立即开始动画 */
 }
+
+.nav-vertical li {
+  opacity: 1; /* 默认不透明 */
+  transform: translateY(0); /* 默认不偏移 */
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --stagger-delay: 0.05s;
+}
+
+/* 菜单收起时的菜单项样式 */
+.nav-container:not(.expanded) .nav-vertical li {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* 菜单收起时的交错延迟 - 反向顺序 */
+.nav-container:not(.expanded) .nav-vertical li:nth-child(1) { transition-delay: 0.4s; }
+.nav-container:not(.expanded) .nav-vertical li:nth-child(2) { transition-delay: 0.35s; }
+.nav-container:not(.expanded) .nav-vertical li:nth-child(3) { transition-delay: 0.3s; }
+.nav-container:not(.expanded) .nav-vertical li:nth-child(4) { transition-delay: 0.25s; }
+.nav-container:not(.expanded) .nav-vertical li:nth-child(5) { transition-delay: 0.2s; }
+.nav-container:not(.expanded) .nav-vertical li:nth-child(6) { transition-delay: 0.15s; }
+.nav-container:not(.expanded) .nav-vertical li:nth-child(7) { transition-delay: 0.1s; }
+.nav-container:not(.expanded) .nav-vertical li:nth-child(8) { transition-delay: 0.05s; }
+.nav-container:not(.expanded) .nav-vertical li:nth-child(9) { transition-delay: 0s; }  
 
 /* 表格样式 */
 .data-table {
@@ -154,7 +215,7 @@ body {
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 10px 30px var(--shadow-color);
-  transition: transform 0.3s ease;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 统一动画曲线 */
 }
 
 .data-table:hover {
@@ -162,16 +223,14 @@ body {
 }
 
 .data-table th {
-  background: linear-gradient(135deg, 
-    var(--primary-color), 
-    var(--secondary-color)
-  );
+  background: var(--table-header-bg); /* 使用专门的表头背景变量 */
   color: white;
   padding: 1.2rem;
   text-align: left;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  text-shadow: 0 0 3px rgba(0,0,0,0.3); /* 添加文字阴影增强可读性 */
 }
 
 .data-table td {
@@ -188,46 +247,44 @@ body {
   background: rgba(var(--primary-rgb), 0.05);
 }
 
-/* 水波纹效果 */
+/* 全局水波纹效果 - 扁平化设计 */
 .global-ripple {
   position: fixed;
-  width: 20px;
-  height: 20px;
-  background: radial-gradient(
-      circle at center,
-      #008cffb3 0%, /* 蓝色主题色 */
-      #008cff4d 40%,
-      #008cff1a 100%
-  );
+  width: 25px; /* 更小的初始尺寸 */
+  height: 25px;
   border-radius: 50%;
-  animation: ripple 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 2px solid rgba(var(--primary-rgb), 0.9); /* 纯色边框 */
+  background: transparent; /* 完全透明背景 */
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 1;
   pointer-events: none;
-  z-index: 1000;
-  transform: translate(-50%, -50%);
+  z-index: 9999;
+  animation: ripple 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; /* 更简洁的动画曲线 */
 }
 
-/* 修改原有涟漪动画，增加颗粒混合效果 */
+/* 扁平化涟漪动画 */
 @keyframes ripple {
   0% {
-      transform: translate(-50%, -50%) scale(0.5);
-      opacity: 0.7;
-      filter: 
-          drop-shadow(0 0 2px rgba(0, 255, 255, 0.6))
-          blur(1px);
-  }
-  50% {
-      filter: 
-          drop-shadow(0 0 4px rgba(0, 255, 255, 0.4))
-          blur(2px);
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+    border-width: 2px;
   }
   100% {
-      transform: translate(-50%, -50%) scale(30);
-      opacity: 0;
-      filter: 
-          drop-shadow(0 0 0 rgba(0, 255, 255, 0))
-          blur(3px);
+    transform: translate(-50%, -50%) scale(8); /* 扩散范围适中 */
+    opacity: 0;
+    border-width: 1px; /* 边框逐渐变细 */
   }
 }
+
+/* 深色主题适配 */
+.dark-theme .global-ripple {
+  border-color: rgba(var(--primary-rgb), 1); /* 深色主题下更鲜艳 */
+}
+
+/* 浅色主题适配 */
+.light-theme .global-ripple {
+  border-color: rgba(var(--primary-rgb), 0.8); /* 浅色主题下稍淡 */
+}  
 
 @keyframes ripple-distort {
   0% {
@@ -269,6 +326,79 @@ body {
   }
 }
 
+/* 针对平板设备的样式 */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .nav-container {
+    top: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+  }
+  
+  .data-table {
+    font-size: 1rem;
+  }
+  
+  .hero h1 {
+    font-size: 3.5rem;
+  }
+  
+  .hero p {
+    font-size: 1.1rem;
+  }
+}
+
+/* 针对手机设备的样式 */
+@media (max-width: 768px) {
+  .nav-container {
+    top: 10px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .data-table {
+    font-size: 0.9rem;
+  }
+  
+  .data-table th,
+  .data-table td {
+    padding: 0.8rem;
+  }
+  
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+  
+  .hero p {
+    font-size: 1rem;
+  }
+  
+  .sticky-nav {
+    flex-direction: column;
+    padding: 10px 5px;
+  }
+  
+  .nav-logo {
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+  }
+  
+  .nav-links {
+    justify-content: center;
+    margin-right: 0;
+  }
+  
+  .nav-links a {
+    margin: 5px;
+    font-size: 0.9rem;
+  }
+  
+  .card {
+    padding: 1.5rem;
+  }
+}
+
 /* 保留原有动画效果 */
 @keyframes neon-flicker {
   0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
@@ -278,6 +408,7 @@ body {
     text-shadow: none;
   }
 }
+
 @keyframes glitch {
   0%, 100% { transform: translate(0); }
   20% { transform: translate(-3px, 3px); }
@@ -329,6 +460,7 @@ body {
     transform: translateY(0);
   }
 }
+
 @keyframes neonGlow {
   0% {
     background-position: 0% 50%;
@@ -340,6 +472,7 @@ body {
     background-position: 0% 50%;
   }
 }
+
 @keyframes gradientShift {
   0% {
     background-position: 0% 50%;
@@ -371,37 +504,6 @@ body {
   animation: breatheTitle 4s ease-in-out infinite;
 }
 
-/* 导航栏链接发光效果 */
-.nav-links a {
-  color: var(--text-color);
-  text-decoration: none;
-  position: relative;
-  padding: 0.5rem 0;
-  transition: all 0.3s ease;
-  font-weight: bold;
-  text-shadow: none; /* 初始化阴影 */
-}
-
-.nav-links a:hover {
-  color: var(--primary-color);
-  text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); /* 添加发光效果 */
-  animation: neon-flicker 1.5s infinite alternate; /* 添加动画效果 */
-}
-
-.nav-links a::before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
-  transition: width 0.3s ease;
-}
-
-.nav-links a:hover::before {
-  width: 100%;
-}
 
 /* 彩色发光动画 */
 @keyframes neon-flicker {
@@ -442,8 +544,6 @@ body {
 
 .control-btn:hover {
   transform: scale(1.1);
-  background: var(--primary-color);
-  color: white;
 }
 
 /* 主按钮 */
@@ -473,8 +573,7 @@ body {
 }
 
 .main-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-3px); /* 轻轻的悬浮动画 */
 }
 
 .main-btn::before {
@@ -503,8 +602,8 @@ body {
 }
 
 .data-table th {
-  background: var(--table-header-bg);
-  color: var(--primary-color);
+  background: var(--primary-color); /* 表格表头纯色设计 */
+  color: white;
   padding: 12px 15px;
   text-align: left;
   font-weight: bold;
@@ -578,7 +677,7 @@ body {
   top: 0;
   left: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+  background: var(--primary-color); /* 滚动条使用纯色设计 */
   width: 0%;
   z-index: 100;
   transition: width 0.2s ease;
@@ -590,7 +689,7 @@ body {
   position: sticky;
   top: 0;
   background: var(--nav-bg);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(3px); /* 高斯模糊通透一点 */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -609,13 +708,38 @@ body {
   text-shadow: 0 0 10px rgba(0,255,255,0.5);
   transition: all 0.3s ease;
 }
+
+/* 导航链接容器 */
+.nav-links {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-right: 50px; /* 将链接推到左侧 */
+}
+
+/* 导航链接样式 */
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  margin-right: 15px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+/* 导航链接悬停效果 */
+.nav-links a:hover {
+  transform: translateY(-2px);
+}
+
 .nav-logo:hover {
   transform: scale(1.05);
   text-shadow: 0 0 15px rgba(0,255,255,0.8);
 }
 .nav-links {
   display: flex;
-  list-style: none;
+  align-items: center;
 }
 .nav-links li {
   margin-left: 2rem;
@@ -636,13 +760,10 @@ body {
   left: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+  background: var(--primary-color);
   transition: width 0.3s ease;
 }
-.nav-links a:hover {
-  color: var(--primary-color);
-  text-shadow: 0 0 10px rgba(0,255,255,0.5);
-}
+
 .nav-links a:hover::before {
   width: 100%;
 }
@@ -804,25 +925,201 @@ body {
 
 /* 装饰元素动画 */
 @keyframes float {
-  0% {
-    transform: translate(0, 0);
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+    filter: hue-rotate(0deg);
   }
-  25% {
-    transform: translate(5%, 5%);
+  15% {
+    transform: translateY(-15px) rotate(2deg);
+    filter: hue-rotate(5deg) brightness(1.05);
   }
-  50% {
-    transform: translate(0, 0);
+  30% {
+    transform: translateY(0) rotate(-1deg);
+    filter: hue-rotate(-3deg) brightness(1);
+  }
+  45% {
+    transform: translateY(-10px) rotate(1deg);
+    filter: hue-rotate(2deg) brightness(1.03);
+  }
+  60% {
+    transform: translateY(5px) rotate(-1deg);
+    filter: hue-rotate(-1deg) brightness(0.98);
   }
   75% {
-    transform: translate(-5%, -5%);
+    transform: translateY(-8px) rotate(1deg);
+    filter: hue-rotate(3deg) brightness(1.02);
   }
-  100% {
-    transform: translate(0, 0);
+  90% {
+    transform: translateY(2px) rotate(-0.5deg);
+    filter: hue-rotate(0deg) brightness(1);
   }
 }
 .light-theme .hero-decoration span {
   background: rgba(58, 123, 213, 0.1);
   border: 1px solid rgba(58, 123, 213, 0.3);
+}
+
+/* 新增的脉冲动画效果 */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  }
+  25% {
+    transform: scale(1.05);
+    opacity: 0.9;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.8;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
+  }
+  75% {
+    transform: scale(1.03);
+    opacity: 0.9;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  }
+}
+
+/* 新增的波浪动画效果 */
+@keyframes wave {
+  0%, 100% {
+    transform: rotate(0deg);
+    filter: brightness(1);
+  }
+  25% {
+    transform: rotate(5deg);
+    filter: brightness(1.05);
+  }
+  50% {
+    transform: rotate(0deg);
+    filter: brightness(1.1);
+  }
+  75% {
+    transform: rotate(-5deg);
+    filter: brightness(1.05);
+  }
+}
+
+/* 新增的闪烁动画效果 */
+@keyframes flicker {
+  0%, 100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  12.5% {
+    opacity: 0.7;
+    filter: brightness(0.9);
+  }
+  25% {
+    opacity: 1;
+    filter: brightness(1.1);
+  }
+  37.5% {
+    opacity: 0.8;
+    filter: brightness(0.8);
+  }
+  50% {
+    opacity: 1;
+    filter: brightness(1.2);
+  }
+  62.5% {
+    opacity: 0.75;
+    filter: brightness(0.95);
+  }
+  75% {
+    opacity: 0.9;
+    filter: brightness(1.05);
+  }
+  87.5% {
+    opacity: 0.85;
+    filter: brightness(1);
+  }
+}
+
+/* 新增的旋转动画效果 */
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg) scale(1);
+    filter: hue-rotate(0deg);
+  }
+  25% {
+    transform: rotate(45deg) scale(1.05);
+    filter: hue-rotate(90deg);
+  }
+  50% {
+    transform: rotate(90deg) scale(1);
+    filter: hue-rotate(180deg);
+  }
+  75% {
+    transform: rotate(135deg) scale(1.05);
+    filter: hue-rotate(270deg);
+  }
+  100% {
+    transform: rotate(180deg) scale(1);
+    filter: hue-rotate(360deg);
+  }
+}
+
+/* 新增的弹性动画效果 */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    filter: brightness(1);
+  }
+  25% {
+    transform: translateY(-20px) scale(1.1);
+    filter: brightness(1.1);
+  }
+  50% {
+    transform: translateY(0) scale(0.9);
+    filter: brightness(0.9);
+  }
+  75% {
+    transform: translateY(-10px) scale(1.05);
+    filter: brightness(1.05);
+  }
+}
+
+/* 新增的滑动动画效果 */
+@keyframes slide {
+  0% {
+    transform: translateX(0) translateY(0) rotate(0deg);
+    opacity: 0;
+    filter: blur(3px);
+  }
+  20% {
+    transform: translateX(-20px) translateY(10px) rotate(-3deg);
+    opacity: 0.7;
+    filter: blur(2px);
+  }
+  40% {
+    transform: translateX(5px) translateY(-5px) rotate(1deg);
+    opacity: 0.9;
+    filter: blur(1px);
+  }
+  60% {
+    transform: translateX(-5px) translateY(5px) rotate(-1deg);
+    opacity: 0.95;
+    filter: blur(0.5px);
+  }
+  80% {
+    transform: translateX(2px) translateY(-2px) rotate(0.5deg);
+    opacity: 0.98;
+    filter: blur(0.25px);
+  }
+  100% {
+    transform: translateX(0) translateY(0) rotate(0deg);
+    opacity: 1;
+    filter: blur(0);
+  }
 }
 
 /* 主内容区块通用样式 */
@@ -1011,9 +1308,7 @@ body {
 }
 
 .data-table th {
-  background: linear-gradient(135deg, 
-    var(--primary-color), 
-    var(--secondary-color));
+  background: var(--primary-color); /* 表格表头纯色设计 */
   color: white;
   padding: 1.2rem 1.5rem;
   text-align: left;
@@ -1131,57 +1426,20 @@ body {
   color: white;
   text-transform: uppercase;
   letter-spacing: 1px;
-  transition: transform 1.2s ease;
+  transition: transform 0.3s ease; /* 修改为只有悬浮动画 */
   cursor: pointer;
 }
 
-.main-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(45deg, 
-    #ffb3d9, /* 轻柔粉色 */
-    #ffd166, /* 淡黄色 */
-    #90caf9, /* 淡蓝色 */
-    #ffb3d9, /* 轻柔粉色 */
-    #ffd166, /* 淡黄色 */
-    #90caf9  /* 淡蓝色 */
-  );
-  background-size: 600% 600%;
-  z-index: -1;
-  transition: background-position 3.6s ease;
-  opacity: 0;
-}
-
 .main-btn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px); /* 轻轻的悬浮动画 */
 }
 
-.main-btn:hover::before {
-  opacity: 1;
-  background-position: 100% 100%;
-  transition: background-position 4.5s ease;
+.main-btn::before {
+  display: none; /* 移除发光效果 */
 }
 
 .main-btn::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -2;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
-  transition: all 1.5s ease;
-  opacity: 0;
-}
-
-.main-btn:hover::after {
-  opacity: 1;
-  transform: scale(1.05);
+  display: none; /* 移除发光效果 */
 }
 
 @keyframes gradientShift {
@@ -1221,7 +1479,7 @@ table:not(.data-table) {
 }
 
 table:not(.data-table) th {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: var(--primary-color); /* 表格表头纯色设计 */
   color: white;
   padding: 12px 15px;
   text-align: left;
@@ -1371,14 +1629,14 @@ a:hover {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); /* 滚动条滑块背景 */
+  background: var(--primary-color); /* 滚动条使用纯色设计 */
   border-radius: 4px;
   border: 2px solid transparent; /* 滚动条滑块边框 */
   background-clip: content-box; /* 背景裁剪到内容区域 */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(90deg, var(--secondary-color), var(--primary-color)); /* 滚动条滑块悬停背景 */
+  background: var(--secondary-color); /* 滚动条滑块悬停背景 */
 }
 
 ::-webkit-scrollbar-corner {
@@ -1391,7 +1649,7 @@ a:hover {
   top: 0;
   left: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+  background: var(--primary-color); /* 滚动条使用纯色设计 */
   width: 0%;
   z-index: 100;
   transition: width 0.2s ease;
@@ -1424,17 +1682,31 @@ pre code {
 }
 
 /* 深色主题下的代码块样式 */
+/* 主题变量 */
 :root {
-  --code-bg-color: rgba(0, 0, 0, 0.7); /* 深色主题代码块背景 */
-  --code-color: #e0e0e0; /* 深色主题代码文字颜色 */
-  --code-border-color: #333; /* 深色主题代码块边框颜色 */
+  --bg-color: #121212;
+  --card-bg: rgba(30, 30, 30, 0.9);
+  --text-color: #e0e0e0;
+  --primary-color: #00ffff;
+  --secondary-color: #ff00ff;
+  --border-color: #333;
+  --shadow-color: rgba(0,0,0,0.5);
+  --nav-bg: rgba(18, 18, 18, 0.95);
+  --table-header-bg: rgba(0, 255, 255, 0.9); /* 表头背景不透明度提高 */
+  --primary-rgb: 0, 255, 255;
 }
 
-/* 浅色主题下的代码块样式 */
 .light-theme {
-  --code-bg-color: rgba(255, 255, 255, 0.7); /* 浅色主题代码块背景 */
-  --code-color: #333; /* 浅色主题代码文字颜色 */
-  --code-border-color: #d5e7f7; /* 浅色主题代码块边框颜色 */
+  --bg-color: #f0f6fc;
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --text-color: #2c3e50;
+  --primary-color: #4a90e2;
+  --secondary-color: #63e4c8;
+  --border-color: #d5e7f7;
+  --shadow-color: rgba(74, 144, 226, 0.15);
+  --nav-bg: rgba(240, 246, 252, 0.9);
+  --table-header-bg: rgba(74, 144, 226, 0.95); /* 浅色主题表头优化 */
+  --primary-rgb: 74, 144, 226;
 }
 
 pre {
@@ -1529,166 +1801,4 @@ blockquote::after {
 blockquote {
   margin: 1.5em 0;
   padding-left: 1.5em;
-  border-left: 4px solid var(--primary-color);
-  color: var(--text-color);
-  font-style: italic;
-  background-color: rgba(var(--primary-rgb), 0.05);
-}
-
-@media screen and (max-width: 768px) and (orientation: portrait) {
-  /* 调整字体大小 */
-  .hero h1 {
-      font-size: 3rem;
-  }
-  .hero p {
-      font-size: 1.1rem;
-  }
-  /* 调整间距 */
-  .timeline::before {
-      left: 30px;
-  }
-  .timeline-item {
-      width: calc(100% - 80px);
-      left: 60px !important;
-      margin-left: -60px;
-  }
-  .timeline-date {
-      font-size: 1rem;
-  }
-  /* 调整表格样式 */
-  .data-table th, .data-table td {
-      padding: 0.8rem;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  /* 进一步调整字体大小 */
-  .hero h1 {
-      font-size: 2.5rem;
-  }
-  .hero p {
-      font-size: 1rem;
-  }
-  /* 调整卡片样式 */
-  .card {
-      padding: 1.5rem;
-  }
-  /* 调整导航栏样式 */
-  .nav-container {
-      width: 40px;
-      height: 40px;
-  }
-  /* 调整按钮样式 */
-  .main-btn {
-      padding: 10px 15px;
-      font-size: 0.9rem;
-  }
-}
-
-@media screen and (min-width: 769px) and (max-width: 1024px) and (orientation: landscape) {
-  /* 中型设备的样式 */
-  /* 调整字体大小 */
-  .hero h1 {
-      font-size: 3.5rem;
-  }
-  /* 调整间距 */
-  .timeline-item {
-      padding: 1.5rem;
-  }
-}
-
-@media screen and (min-width: 1025px) {
-  /* 大型设备的样式 */
-  /* 调整字体大小 */
-  .hero h1 {
-      font-size: 4.5rem;
-  }
-  /* 调整间距 */
-  .card {
-      padding: 3rem;
-  }
-}
-
-@media screen and (-webkit-min-device-pixel-ratio: 2) {
-  /* 高DPI设备 */
-  /* 提高图片、字体等的清晰度 */
-  .nav-logo {
-      font-size: 2rem;
-  }
-}
-
-@media screen and (prefers-color-scheme: dark) {
-  /* 系统深色模式 */
-  /* 可以在这里添加系统深色模式下的样式覆盖 */
-}
-
-@media screen and (prefers-color-scheme: light) {
-  /* 系统浅色模式 */
-  /* 可以在这里添加系统浅色模式下的样式覆盖 */
-}
-
-/* 深色主题下的导航栏和菜单样式 */
-body:not(.light-theme) {
-  --nav-bg: rgba(18, 18, 18, 0.65); /* 深色主题导航栏背景 */
-  --menu-bg: rgba(30, 30, 30, 0.6); /* 深色主题菜单背景 */
-}
-
-/* 浅色主题下的导航栏和菜单样式 */
-body.light-theme {
-  --nav-bg: rgba(240, 246, 252, 0.85); /* 浅色主题导航栏背景 */
-  --menu-bg: rgba(255, 255, 255, 0.8); /* 浅色主题菜单背景 */
-}
-
-/* 通用导航栏样式 */
-.nav-container {
-  backdrop-filter: blur(30px);
-  background-color: var(--nav-bg);
-  border-radius: 25px;
-}
-
-/* 通用导航菜单样式 */
-.nav-vertical {
-  backdrop-filter: blur(25px);
-  background-color: var(--menu-bg);
-  padding: 15px 0;
-  border-radius: 12px;
-}
-
-/* 针对小屏设备的导航栏样式 */
-@media screen and (max-width: 768px) {
-  .nav-container {
-    backdrop-filter: blur(15px);
-    background-color: var(--nav-bg);
-  }
-}
-
-/* 针对小屏设备的导航菜单样式 */
-@media screen and (max-width: 480px) {
-  .nav-container {
-    backdrop-filter: blur(10px);
-    background-color: var(--nav-bg);
-  }
-  .nav-vertical {
-    backdrop-filter: blur(15px);
-    background-color: var(--menu-bg);
-  }
-}
-
-/* 针对小屏设备的导航菜单样式 */
-@media screen and (max-width: 480px) {
-  .nav-container {
-    backdrop-filter: blur(10px);
-    background-color: var(--nav-bg);
-  }
-  .nav-vertical {
-    backdrop-filter: blur(15px);
-    background-color: var(--menu-bg);
-  }
-}
-
-@media screen and (max-width: 480px) {
-  /* 针对手机大小的设备 */
-  .nav-container {
-      backdrop-filter: blur(10px); /* 减少小屏幕上模糊的强度 */
-  }
 }
