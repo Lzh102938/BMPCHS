@@ -58,6 +58,9 @@ body {
 
 /* 垂直导航栏 */
 .nav-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* 始终右对齐 */
   position: fixed;
   top: 20px;
   right: 20px;
@@ -88,16 +91,15 @@ body {
   height: 50px;
   cursor: pointer;
   color: var(--text-color);
+  width: 100%; /* 保证触发区域完整 */
+  position: relative;
+  padding-right: 15px; /* 留出图标位置 */
 }
 
 .nav-icon::before {
   content: "☰";
   font-size: 1.5rem;
   transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 统一动画曲线 */
-}
-
-.nav-container.expanded .nav-icon::before {
-  transform: rotate(90deg) scale(1.2); /* 旋转并略微放大 */
 }
 
 .nav-vertical {
@@ -110,6 +112,7 @@ body {
   transform: translateY(10px); /* 初始位置下移 */
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 统一动画曲线 */
   transition-delay: 0.1s; /* 延迟显示 */
+  width: 100%; /* 防止内容溢出 */
 }
 
 .nav-container.expanded .nav-vertical {
@@ -149,6 +152,9 @@ body {
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  white-space: nowrap; /* 禁止文字换行 */
+  font-size: 1rem !important; /* 固定字体大小 */
+  padding: 10px 15px !important; /* 固定内边距 */
 }
 
 .nav-vertical a::before {
@@ -309,93 +315,223 @@ body {
   }
 }
 
-/* 响应式设计 */
+/* 移动端特别优化 */
 @media (max-width: 768px) {
-  .nav-container {
-    top: 10px;
-    right: 10px;
+  .nav-container.expanded {
+    width: min(90vw, 300px); /* 限制最大宽度 */
+    right: 5vw;
   }
-  
-  .data-table {
-    font-size: 0.9rem;
-  }
-  
-  .data-table th,
-  .data-table td {
-    padding: 0.8rem;
-  }
-}
 
-/* 针对平板设备的样式 */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .nav-container {
-    top: 20px;
-    right: 20px;
-    width: 60px;
-    height: 60px;
+  .nav-vertical {
+    padding: 0 10px 10px; /* 调整内边距 */
   }
-  
-  .data-table {
-    font-size: 1rem;
-  }
-  
-  .hero h1 {
-    font-size: 3.5rem;
-  }
-  
-  .hero p {
-    font-size: 1.1rem;
-  }
-}
 
-/* 针对手机设备的样式 */
-@media (max-width: 768px) {
-  .nav-container {
-    top: 10px;
-    right: 10px;
-    width: 50px;
-    height: 50px;
+  .footer-links {
+    justify-content: flex-start; /* 左对齐显示 */
+    -webkit-overflow-scrolling: touch; /* 流畅滚动 */
   }
-  
-  .data-table {
-    font-size: 0.9rem;
-  }
-  
-  .data-table th,
-  .data-table td {
-    padding: 0.8rem;
-  }
-  
-  .hero h1 {
-    font-size: 2.5rem;
-  }
-  
-  .hero p {
-    font-size: 1rem;
-  }
-  
-  .sticky-nav {
-    flex-direction: column;
-    padding: 10px 5px;
-  }
-  
+
   .nav-logo {
-    margin-bottom: 10px;
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* 调小字号 */
+    min-width: auto; /* 取消最小宽度限制 */
+  }
+}
+
+/* 响应式设计 - 移动优先 */
+@media (max-width: 480px) { /* 超小屏幕手机 */
+  .nav-container {
+    top: 5px;
+    right: 5px;
+    width: 45px;
+    height: 45px;
   }
   
-  .nav-links {
-    justify-content: center;
-    margin-right: 0;
-  }
-  
-  .nav-links a {
-    margin: 5px;
-    font-size: 0.9rem;
+  .hero h1 {
+    font-size: 2rem;
+    line-height: 1.2;
   }
   
   .card {
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border-radius: 12px;
+  }
+  
+  .data-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  .timeline-item {
+    width: 90%;
+    left: 5% !important;
+    margin-bottom: 1.5rem;
+  }
+  
+  .timeline::before {
+    left: 15px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 767px) { /* 大屏手机 */
+  .hero h1 {
+    font-size: 2.8rem;
+  }
+  
+  .card h2 {
+    font-size: 1.8rem;
+  }
+  
+  .nav-container.expanded {
+    width: 200px;
+  }
+  
+  .main-buttons {
+    bottom: 20px;
+    right: 20px;
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) { /* 平板设备 */
+  .card {
+    padding: 2rem;
+    margin: 2rem auto;
+  }
+  
+  .data-table th,
+  .data-table td {
+    padding: 1rem;
+  }
+  
+  .timeline-item {
+    width: 48%;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1199px) { /* 小桌面 */
+  .nav-container {
+    right: 30px;
+    top: 30px;
+  }
+  
+  .card {
+    max-width: 900px;
+  }
+  
+  .hero h1 {
+    font-size: 4.5rem;
+  }
+}
+
+@media (min-width: 1200px) { /* 大桌面 */
+  body {
+    font-size: 18px;
+  }
+  
+  .nav-container {
+    right: 40px;
+    top: 40px;
+  }
+  
+  .card {
+    max-width: 1100px;
+    padding: 3rem;
+  }
+  
+  .hero h1 {
+    font-size: 5rem;
+  }
+  
+  .data-table {
+    font-size: 1rem;
+  }
+}
+
+/* 横屏设备适配 */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero {
+    height: auto;
+    min-height: 100vh;
+    padding: 4rem 2rem;
+  }
+  
+  .nav-container {
+    top: 10px;
+    right: 10px;
+  }
+  
+  .main-buttons {
+    bottom: 15px;
+    right: 15px;
+  }
+}
+
+/* 高分辨率设备 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { 
+  body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  
+  .nav-container {
+    backdrop-filter: blur(6px);
+  }
+}
+
+/* 折叠屏设备适配 */
+@media (max-width: 540px) and (min-height: 720px) {
+  .card {
+    margin: 2rem 1rem;
+  }
+  
+  .timeline-item {
     padding: 1.5rem;
+  }
+}
+
+/* 特殊尺寸适配 */
+@media (width: 1366px) and (height: 768px) { /* 常见笔记本尺寸 */
+  .card {
+    max-width: 1000px;
+  }
+  
+  .hero h1 {
+    font-size: 4.2rem;
+  }
+}
+
+/* 打印优化 */
+@media print {
+  body {
+    background: white !important;
+    color: #000 !important;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  .card {
+    border: 2px solid #ddd !important;
+    background: white !important;
+    margin-top: 20mm !important; /* 保证首页顶部留白 */
+    break-inside: avoid; /* 防止内容切割 */
+  }
+
+  .data-table {
+    background: white !important;
+    color: #000 !important;
+    border: 2px solid #000 !important;
+  }
+
+  .data-table th {
+    background: #eee !important;
+    color: #000 !important;
+  }
+
+  a::after {
+    content: " (" attr(href) ")"; /* 显示链接地址 */
+    font-size: 0.8em;
   }
 }
 
@@ -518,12 +654,16 @@ body {
 /* 控制按钮 */
 .control-buttons {
   position: fixed;
-  top: 80px;
+  top: 85px; /* 调整顶部距离，避免与导航菜单重叠 */
   right: 20px;
-  display: flex;
+  display: grid;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   z-index: 95;
+}
+
+.nav-container.expanded + .control-buttons {
+  top: calc(220px + 20px); /* 根据导航菜单展开后的高度调整 */
 }
 
 .control-btn {
@@ -540,6 +680,7 @@ body {
   transition: all 0.3s ease;
   box-shadow: 0 2px 5px var(--shadow-color);
   font-size: 16px;
+  line-height: 40px; /* 垂直居中 */
 }
 
 .control-btn:hover {
@@ -707,6 +848,8 @@ body {
   color: transparent;
   text-shadow: 0 0 10px rgba(0,255,255,0.5);
   transition: all 0.3s ease;
+  flex-shrink: 0; /* 禁止压缩 */
+  min-width: 120px; /* 保证最小宽度 */
 }
 
 /* 导航链接容器 */
@@ -1274,9 +1417,19 @@ body {
   justify-content: center;
   list-style: none;
   margin-top: 1.5rem;
+  flex-wrap: nowrap; /* 禁止换行 */
+  overflow-x: auto; /* 允许横向滚动 */
+  padding-bottom: 5px; /* 留出滚动条空间 */
+  white-space: nowrap;
 }
+
+.footer-links::-webkit-scrollbar {
+  height: 3px;
+}
+
 .footer-links li {
   margin: 0 1rem;
+  flex-shrink: 0; /* 禁止项目压缩 */
 }
 .footer-links a {
   color: var(--text-color);
