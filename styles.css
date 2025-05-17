@@ -654,11 +654,11 @@ body {
 /* 控制按钮 */
 .control-buttons {
   position: fixed;
-  top: 85px; /* 调整顶部距离，避免与导航菜单重叠 */
-  right: 20px;
+  bottom: 20px; /* 距离底部20px */
+  left: 20px; /* 距离左侧20px */
   display: grid;
-  flex-direction: column;
-  gap: 8px;
+  grid-template-columns: 1fr; /* 垂直排列 */
+  gap: 10px;
   z-index: 95;
 }
 
@@ -667,8 +667,8 @@ body {
 }
 
 .control-btn {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   background: var(--card-bg);
   border: 1px solid var(--border-color);
@@ -679,13 +679,28 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 5px var(--shadow-color);
-  font-size: 16px;
-  line-height: 40px; /* 垂直居中 */
+  font-size: 18px;
+  position: relative;
 }
 
 .control-btn:hover {
   transform: scale(1.1);
+  box-shadow: 0 5px 15px var(--shadow-color);
 }
+
+/* 为主题按钮添加特定样式 */
+.theme-toggle::before {
+  content: "🌙"; /* 默认显示月亮图标 */
+}
+
+.light-theme .theme-toggle::before {
+  content: "☀️"; /* 浅色主题显示太阳图标 */
+}
+
+/* 确保导航菜单图标垂直居中 */
+.nav-header {
+  line-height: 1; /* 重置行高 */
+}  
 
 /* 主按钮 */
 .main-buttons {
