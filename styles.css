@@ -74,6 +74,8 @@ body {
   transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 统一动画曲线 */
   overflow: hidden;
   transform-origin: top right; /* 设置变换原点 */
+  touch-action: manipulation; /* 优化触控响应 */
+  will-change: transform; /* 启用GPU加速 */
 }
 
 .nav-container.expanded {
@@ -236,7 +238,7 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  text-shadow: 0 0 3px rgba(0,0,0,0.3); /* 添加文字阴影增强可读性 */
+  text-shadow: 0 0 3px rgb(0, 0, 0); /* 添加文字阴影增强可读性 */
 }
 
 .data-table td {
@@ -315,102 +317,200 @@ body {
   }
 }
 
-/* 移动端特别优化 */
-@media (max-width: 768px) {
-  .nav-container.expanded {
-    width: min(90vw, 300px); /* 限制最大宽度 */
-    right: 5vw;
-  }
+/* ==================== 响应式设计规范 ==================== */
+/* 采用移动优先(Mobile First)设计策略 */
 
-  .nav-vertical {
-    padding: 0 10px 10px; /* 调整内边距 */
-  }
+/* 1. 基础响应式设置 */
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%; /* 禁止iOS文字缩放 */
+}
 
-  .footer-links {
-    justify-content: flex-start; /* 左对齐显示 */
-    -webkit-overflow-scrolling: touch; /* 流畅滚动 */
-  }
-
-  .nav-logo {
-    font-size: 1.5rem; /* 调小字号 */
-    min-width: auto; /* 取消最小宽度限制 */
+/* 2. 通用响应式规则 */
+@media (pointer: coarse) {
+  /* 触控设备优化 */
+  button, 
+  .btn,
+  a[role="button"] {
+    min-width: 44px;
+    min-height: 44px;
   }
 }
 
-/* 响应式设计 - 移动优先 */
-@media (max-width: 480px) { /* 超小屏幕手机 */
-  .nav-container {
-    top: 5px;
-    right: 5px;
-    width: 45px;
-    height: 45px;
+/* 3. 超小屏幕设备 (0-360px) */
+@media (max-width: 360px) {
+  html {
+    font-size: 14px;
   }
   
   .hero h1 {
-    font-size: 2rem;
-    line-height: 1.2;
+    font-size: 4rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 20px rgba(0,255,255,0.3);
+  }
+  
+  .nav-container {
+    top: 5px;
+    right: 5px;
+    
+    &.expanded {
+      width: calc(100vw - 10px);
+      max-height: 80vh;
+    }
   }
   
   .card {
     padding: 1rem;
-    margin: 1.5rem 0;
-    border-radius: 12px;
+    margin: 1rem 0.5rem;
+    border-radius: 10px;
+  }
+  
+  .main-buttons {
+    bottom: 10px;
+    right: 10px;
+    flex-direction: column-reverse;
+  }
+  
+  .footer-links {
+    display: none; /* 完全隐藏 */
+  }
+}
+
+/* 4. 小屏幕手机 (361-480px) */
+
+
+@media (min-width: 361px) and (max-width: 480px) {
+  html {
+    font-size: 15px;
+  }
+  
+  .hero h1 {
+    font-size: 4rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 20px rgba(0,255,255,0.3);
+  }
+  
+  .nav-container.expanded {
+    width: 90vw;
   }
   
   .data-table {
     display: block;
     overflow-x: auto;
-    white-space: nowrap;
-  }
-  
-  .timeline-item {
-    width: 90%;
-    left: 5% !important;
-    margin-bottom: 1.5rem;
+    
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
   }
   
   .timeline::before {
     left: 15px;
   }
+  
+  .timeline-item {
+    width: calc(100% - 30px) !important;
+    left: 15px !important;
+  }
+
+  .footer-links {
+    display: none; /* 完全隐藏 */
+  }
 }
 
-@media (min-width: 481px) and (max-width: 767px) { /* 大屏手机 */
+/* 5. 中屏幕手机 (481-640px) */
+@media (min-width: 481px) and (max-width: 640px) {
   .hero h1 {
-    font-size: 2.8rem;
+    font-size: 4rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 20px rgba(0,255,255,0.3);
   }
   
-  .card h2 {
-    font-size: 1.8rem;
+  .card {
+    padding: 1.5rem;
+    margin: 1.5rem;
+  }
+  
+  .footer-links {
+    display: none; /* 完全隐藏 */
+    justify-content: flex-start;
+    padding-bottom: 10px;
+    -webkit-overflow-scrolling: touch;
+    
+    li {
+      margin: 0 0.8rem;
+    }
+  }
+}
+
+/* 6. 大屏手机/小平板 (641-767px) */
+@media (min-width: 641px) and (max-width: 767px) {
+  .hero h1 {
+  font-size: 4rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 20px rgba(0,255,255,0.3);
   }
   
   .nav-container.expanded {
-    width: 200px;
+    width: 280px;
   }
   
-  .main-buttons {
-    bottom: 20px;
-    right: 20px;
-    flex-direction: column;
+  .timeline-item {
+    width: 46%;
+  }
+
+  .footer-links {
+    display: none; /* 完全隐藏 */
   }
 }
 
-@media (min-width: 768px) and (max-width: 1024px) { /* 平板设备 */
+/* 7. 平板竖屏 (768-1024px) */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
   .card {
+    max-width: 90%;
     padding: 2rem;
-    margin: 2rem auto;
   }
   
   .data-table th,
   .data-table td {
-    padding: 1rem;
+    padding: 0.8rem;
   }
   
   .timeline-item {
-    width: 48%;
+    width: 46%;
   }
 }
 
-@media (min-width: 1025px) and (max-width: 1199px) { /* 小桌面 */
+/* 8. 平板横屏 (768-1024px) */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .hero {
+    padding-top: 3rem;
+  }
+  
+  .card {
+    margin: 2rem auto;
+    max-width: 90%;
+  }
+  
+  .main-buttons {
+    bottom: 25px;
+    right: 25px;
+  }
+}
+
+/* 9. 小桌面 (1025-1199px) */
+@media (min-width: 1025px) and (max-width: 1199px) {
   .nav-container {
     right: 30px;
     top: 30px;
@@ -419,14 +519,11 @@ body {
   .card {
     max-width: 900px;
   }
-  
-  .hero h1 {
-    font-size: 4.5rem;
-  }
 }
 
-@media (min-width: 1200px) { /* 大桌面 */
-  body {
+/* 10. 大桌面 (1200px+) */
+@media (min-width: 1200px) {
+  html {
     font-size: 18px;
   }
   
@@ -439,27 +536,31 @@ body {
     max-width: 1100px;
     padding: 3rem;
   }
-  
-  .hero h1 {
-    font-size: 5rem;
-  }
-  
-  .data-table {
-    font-size: 1rem;
+}
+
+/* 11. 超宽屏 (1600px+) */
+@media (min-width: 1600px) {
+  .card {
+    max-width: 1400px;
   }
 }
 
-/* 横屏设备适配 */
-@media (max-height: 500px) and (orientation: landscape) {
+/* 12. 横屏设备优化 */
+@media (orientation: landscape) and (max-height: 500px) {
   .hero {
     height: auto;
     min-height: 100vh;
-    padding: 4rem 2rem;
+    padding: 2rem;
   }
   
   .nav-container {
     top: 10px;
     right: 10px;
+  }
+  
+  .card {
+    margin: 1.5rem 0;
+    padding: 1.2rem;
   }
   
   .main-buttons {
@@ -468,22 +569,14 @@ body {
   }
 }
 
-/* 高分辨率设备 */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { 
-  body {
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
+/* 13. 折叠屏设备适配 */
+@media (max-width: 540px) and (min-height: 720px) {
+  .hero {
+    padding-top: 4rem;
   }
   
-  .nav-container {
-    backdrop-filter: blur(6px);
-  }
-}
-
-/* 折叠屏设备适配 */
-@media (max-width: 540px) and (min-height: 720px) {
   .card {
-    margin: 2rem 1rem;
+    margin: 1.5rem 0.5rem;
   }
   
   .timeline-item {
@@ -491,18 +584,25 @@ body {
   }
 }
 
-/* 特殊尺寸适配 */
-@media (width: 1366px) and (height: 768px) { /* 常见笔记本尺寸 */
-  .card {
-    max-width: 1000px;
+/* 14. 高DPI设备优化 */
+@media 
+(-webkit-min-device-pixel-ratio: 2), 
+(min-resolution: 192dpi) {
+  body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
   
-  .hero h1 {
-    font-size: 4.2rem;
+  .nav-container {
+    backdrop-filter: blur(8px);
+  }
+  
+  .card {
+    border-width: 0.5px;
   }
 }
 
-/* 打印优化 */
+/* 15. 打印样式 */
 @media print {
   body {
     background: white !important;
@@ -514,8 +614,8 @@ body {
   .card {
     border: 2px solid #ddd !important;
     background: white !important;
-    margin-top: 20mm !important; /* 保证首页顶部留白 */
-    break-inside: avoid; /* 防止内容切割 */
+    margin-top: 20mm !important;
+    break-inside: avoid;
   }
 
   .data-table {
@@ -524,14 +624,234 @@ body {
     border: 2px solid #000 !important;
   }
 
-  .data-table th {
-    background: #eee !important;
-    color: #000 !important;
+  .nav-container,
+  .main-buttons,
+  .control-buttons,
+  .scroll-indicator {
+    display: none !important;
   }
+}
 
-  a::after {
-    content: " (" attr(href) ")"; /* 显示链接地址 */
-    font-size: 0.8em;
+/* 16. 特殊设备适配 */
+/* 16.1 Surface Duo */
+@media (width: 540px) and (height: 720px) {
+  .card {
+    margin: 1.5rem 0.8rem;
+  }
+}
+
+/* 16.2 iPad Pro 12.9" */
+@media (width: 1024px) and (height: 1366px) {
+  .hero h1 {
+    font-size: 4rem;
+  }
+}
+
+/* 17. 响应式工具类 */
+.hidden-mobile {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .hidden-desktop {
+    display: none;
+  }
+  
+  .hidden-mobile {
+    display: block;
+  }
+}
+
+/* 18. 响应式网格系统 */
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* 19. 响应式间距调整 */
+@media (max-width: 768px) {
+  .responsive-spacing {
+    margin: 1rem 0;
+    padding: 0.5rem;
+  }
+}
+
+/* 20. 响应式文字大小 */
+.responsive-text {
+  font-size: 1rem;
+}
+
+@media (min-width: 768px) {
+  .responsive-text {
+    font-size: 1.2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-text {
+    font-size: 1.4rem;
+  }
+}
+
+/* 21. 响应式表格特殊处理 */
+@media (max-width: 768px) {
+  .responsive-table {
+    display: block;
+    position: relative;
+    
+    thead {
+      display: none;
+    }
+    
+    tbody {
+      display: block;
+    }
+    
+    tr {
+      display: block;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+    }
+    
+    td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-bottom: 1px solid var(--border-color);
+      
+      &::before {
+        content: attr(data-label);
+        font-weight: bold;
+        margin-right: 1rem;
+        color: var(--primary-color);
+      }
+      
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+/* 22. 打印样式优化 */
+
+
+
+/* 23. 响应式动画优化 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* 24. 暗黑模式响应式调整 */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+  }
+}
+
+/* 25. 响应式图片 */
+.responsive-img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  
+  @media (min-width: 768px) {
+    &-large {
+      max-width: 120%;
+      margin-left: -10%;
+    }
+  }
+}
+
+/* 26. 响应式视频容器 */
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+  overflow: hidden;
+  
+  iframe,
+  object,
+  embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/* 27. 响应式工具提示 */
+@media (max-width: 640px) {
+  .tooltip {
+    display: none !important;
+  }
+}
+
+/* 28. 响应式表单元素 */
+@media (max-width: 480px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important; /* 防止iOS缩放 */
+  }
+  
+  button {
+    padding: 12px 16px;
+  }
+}
+
+/* 29. 响应式分页 */
+@media (max-width: 640px) {
+  .pagination {
+    flex-wrap: wrap;
+    
+    li {
+      margin: 0.2rem;
+    }
+  }
+}
+
+/* 30. 响应式边栏 */
+@media (max-width: 1024px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: 280px;
+    height: 100vh;
+    transition: transform 0.3s ease;
+    
+    &.active {
+      transform: translateX(300px);
+    }
+  }
+  
+  .main-content {
+    margin-left: 0;
   }
 }
 
@@ -1427,25 +1747,43 @@ body {
   margin-bottom: 1rem;
   font-size: 1.2rem;
 }
+/* 友情链接容器 */
+.footer-links-container {
+  position: relative;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* 友情链接列表 */
 .footer-links {
   display: flex;
   justify-content: center;
   list-style: none;
-  margin-top: 1.5rem;
-  flex-wrap: nowrap; /* 禁止换行 */
-  overflow-x: auto; /* 允许横向滚动 */
-  padding-bottom: 5px; /* 留出滚动条空间 */
+  margin: 1.5rem 0 0;
+  padding: 0 0 8px;
+  overflow-x: auto;
   white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  max-width: 100%;
 }
 
+/* 滚动条样式 */
 .footer-links::-webkit-scrollbar {
   height: 3px;
 }
 
-.footer-links li {
-  margin: 0 1rem;
-  flex-shrink: 0; /* 禁止项目压缩 */
+.footer-links::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 3px;
 }
+
+/* 链接项 */
+.footer-links li {
+  margin: 0 0.8rem;
+  flex: 0 0 auto;
+}
+
 .footer-links a {
   color: var(--text-color);
   text-decoration: none;
@@ -1860,7 +2198,7 @@ pre code {
   --border-color: #333;
   --shadow-color: rgba(0,0,0,0.5);
   --nav-bg: rgba(18, 18, 18, 0.95);
-  --table-header-bg: rgba(0, 255, 255, 0.9); /* 表头背景不透明度提高 */
+  --table-header-bg: #000000; /* 表头背景不透明度提高 */
   --primary-rgb: 0, 255, 255;
 }
 
