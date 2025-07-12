@@ -5,6 +5,103 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         window.addEventListener('load', initPage);
     }
+    
+    // 添加回到顶部按钮（仅在需要时创建）
+    if (!document.querySelector('.back-to-top')) {
+        const backToTopBtn = document.createElement('button');
+        backToTopBtn.className = 'back-to-top';
+        backToTopBtn.innerHTML = '↑';
+        backToTopBtn.title = '回到顶部';
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        document.body.appendChild(backToTopBtn);
+    }
+    
+    // 创建进度条
+    const progressBar = document.createElement('div');
+    progressBar.className = 'progress-bar';
+    document.body.appendChild(progressBar);
+
+    // 滚动事件处理
+    window.addEventListener('scroll', () => {
+        // 回到顶部按钮
+        if (window.pageYOffset > 300) {
+            backToTopBtn.classList.add('show');
+        } else {
+            backToTopBtn.classList.remove('show');
+        }
+
+        // 顶部导航栏滚动效果
+        const nav = document.querySelector('.sticky-nav');
+        if (window.pageYOffset > 50) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+        
+        // 更新进度条
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrollPercentage = (scrollTop / scrollHeight) * 100;
+        progressBar.style.width = scrollPercentage + '%';
+    });
+
+    // 确保所有固定元素初始位置正确
+    const nav = document.querySelector('.sticky-nav');
+    if (nav) {
+        nav.style.top = '0';
+        nav.style.left = '0';
+        nav.style.right = '0';
+    }
+
+    // 导航栏交互
+    const navToggle = document.getElementById('nav-toggle');
+    const navContainer = document.querySelector('.nav-container');
+
+    // 切换导航栏状态
+    navToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        navToggle.classList.toggle('expanded');
+        navContainer.classList.toggle('expanded');
+        
+        // 添加/移除动画类
+        if (navContainer.classList.contains('expanded')) {
+            navContainer.classList.add('animate-expand');
+        } else {
+            navContainer.classList.add('animate-collapse');
+        }
+    });
+
+    // 动画结束处理
+    navContainer.addEventListener('animationend', () => {
+        navContainer.classList.remove('animate-expand', 'animate-collapse');
+    });
+
+    // 点击其他地方关闭导航栏
+    document.addEventListener('click', (e) => {
+        if (!navContainer.contains(e.target) && e.target !== navToggle) {
+            navToggle.classList.remove('expanded');
+            navContainer.classList.remove('expanded', 'animate-expand');
+            navContainer.classList.add('animate-collapse');
+        }
+    });
+
+    // 滚动时自动关闭导航栏
+    window.addEventListener('scroll', () => {
+        if (navContainer.classList.contains('expanded')) {
+            navToggle.classList.remove('expanded');
+            navContainer.classList.remove('expanded', 'animate-expand');
+            navContainer.classList.add('animate-collapse');
+        }
+    });
+
+    // 确保初始状态
+    navContainer.style.opacity = '0';
+    navContainer.style.pointerEvents = 'none';
 });
 
 function initPage() {
@@ -15,13 +112,82 @@ function initPage() {
     });
 
     // 主题切换
-    // 主题切换改为设备的主题样式
     const themeToggle = document.getElementById('theme-toggle');
     if (themeToggle) {
         themeToggle.addEventListener('click', function() {
-            document.body.classList.toggle('light-theme');
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
             createFirework(this);
+            
+            // 保存主题偏好
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
         });
+        
+        // 初始化主题
+        const savedTheme = localStorage.getItem('theme') || 
+                         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.body.setAttribute('data-theme', savedTheme);
+    }
+    
+    // 添加烟花效果函数
+    function createFirework(element) {
+        const rect = element.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'firework-particle';
+            
+            // 随机颜色
+            const hue = Math.random() * 360;
+            particle.style.backgroundColor = `hsl(${hue}, 100%, 60%)`;
+            
+            // 随机大小
+            const size = Math.random() * 6 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            // 设置初始位置
+            particle.style.position = 'fixed';
+            particle.style.left = `${centerX}px`;
+            particle.style.top = `${centerY}px`;
+            particle.style.borderRadius = '50%';
+            particle.style.pointerEvents = 'none';
+            particle.style.zIndex = '10000';
+            
+            document.body.appendChild(particle);
+            
+            // 随机方向和速度
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = Math.random() * 6 + 2;
+            const vx = Math.cos(angle) * velocity;
+            const vy = Math.sin(angle) * velocity;
+            
+            // 动画
+            let opacity = 1;
+            let posX = centerX;
+            let posY = centerY;
+            
+            const animate = () => {
+                posX += vx;
+                posY += vy;
+                opacity -= 0.02;
+                
+                if (opacity <= 0) {
+                    particle.remove();
+                    return;
+                }
+                
+                particle.style.left = `${posX}px`;
+                particle.style.top = `${posY}px`;
+                particle.style.opacity = opacity;
+                
+                requestAnimationFrame(animate);
+            };
+            
+            requestAnimationFrame(animate);
+        }
     }
 
     // 检测系统主题偏好
@@ -42,21 +208,6 @@ function initPage() {
     // 监听主题变化
     systemDarkModeQuery.addEventListener('change', handleThemeChange);
 
-    // ================= 全局水波纹效果 =================
-    document.addEventListener('click', function(e) {
-        // 创建主涟漪
-        const ripple = document.createElement('div');
-        ripple.className = 'global-ripple';
-
-        // 定位主涟漪
-        ripple.style.left = e.clientX + 'px';
-        ripple.style.top = e.clientY + 'px';
-        document.body.appendChild(ripple);
-        
-        // 自动移除
-        setTimeout(() => ripple.remove(), 1800);
-    });
-
     // ================= 垂直导航栏 =================
     const navContainer = document.createElement('div');
     navContainer.className = 'nav-container';
@@ -68,6 +219,9 @@ function initPage() {
         <ul class="nav-vertical"></ul>
     `;
     document.body.appendChild(navContainer);
+    navContainer.style.opacity = '1';
+    navContainer.style.pointerEvents = 'auto';
+    navContainer.style.transform = 'translateX(0)';
 
     // 填充导航项
     const navItems = [
@@ -133,6 +287,16 @@ function initPage() {
                 }
             }
         }
+        // 优化：为所有表格添加点击动画（仅添加一次事件）
+        if (!table.dataset.animated) {
+            table.addEventListener('click', () => {
+                table.classList.remove('animated');
+                // 触发重绘以重置动画
+                void table.offsetWidth;
+                table.classList.add('animated');
+            });
+            table.dataset.animated = "true";
+        }
     });
 
     // ================= 邮箱和网址自动链接通用修复 =================
@@ -188,3 +352,15 @@ function initPage() {
     // 执行自动链接创建
     createLinkNodes();
 }
+
+document.addEventListener('click', (e) => {
+  const ripple = document.createElement('div');
+  ripple.className = 'global-ripple';
+  
+  // 正确设置鼠标位置变量
+  ripple.style.setProperty('--mouseX', `${e.clientX}px`);
+  ripple.style.setProperty('--mouseY', `${e.clientY}px`);
+  
+  document.body.appendChild(ripple);
+  ripple.addEventListener('animationend', () => ripple.remove());
+});
