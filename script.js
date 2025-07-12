@@ -114,19 +114,50 @@ function initPage() {
     // 主题切换
     const themeToggle = document.getElementById('theme-toggle');
     if (themeToggle) {
-        themeToggle.addEventListener('click', function() {
-            const isDark = document.body.getAttribute('data-theme') === 'dark';
-            document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-            createFirework(this);
-            
-            // 保存主题偏好
-            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+      const updateGiscusTheme = () => {
+        const isDark = document.body.getAttribute('data-theme') === 'dark';
+        const giscusTheme = isDark ? 'dark' : 'light';
+      
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (iframe) {
+          iframe.contentWindow.postMessage({
+            giscus: {
+              setConfig: {
+                theme: giscusTheme
+              }
+            }
+          }, 'https://giscus.app');
+        }
+      };
+
+      themeToggle.addEventListener('click', function() {
+        const isDark = document.body.getAttribute('data-theme') === 'dark';
+        document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        createFirework(this);
+      
+        // 保存主题偏好
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
+      
+        // 更新giscus主题
+        updateGiscusTheme();
+      });
+    
+      // 初始化主题
+      const savedTheme = localStorage.getItem('theme') || 
+                       (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.body.setAttribute('data-theme', savedTheme);
+    
+      // 监听giscus加载完成事件
+      window.addEventListener('load', () => {
+        const observer = new MutationObserver(() => {
+          if (document.querySelector('iframe.giscus-frame')) {
+            updateGiscusTheme();
+            observer.disconnect();
+          }
         });
-        
-        // 初始化主题
-        const savedTheme = localStorage.getItem('theme') || 
-                         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        document.body.setAttribute('data-theme', savedTheme);
+      
+        observer.observe(document.body, { childList: true, subtree: true });
+      });
     }
     
     // 添加烟花效果函数
