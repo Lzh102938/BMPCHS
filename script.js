@@ -162,63 +162,35 @@ function initPage() {
     
     // 添加烟花效果函数
     function createFirework(element) {
-        const rect = element.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        
-        for (let i = 0; i < 20; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'firework-particle';
-            
-            // 随机颜色
-            const hue = Math.random() * 360;
-            particle.style.backgroundColor = `hsl(${hue}, 100%, 60%)`;
-            
-            // 随机大小
-            const size = Math.random() * 6 + 2;
-            particle.style.width = `${size}px`;
-            particle.style.height = `${size}px`;
-            
-            // 设置初始位置
-            particle.style.position = 'fixed';
-            particle.style.left = `${centerX}px`;
-            particle.style.top = `${centerY}px`;
-            particle.style.borderRadius = '50%';
-            particle.style.pointerEvents = 'none';
-            particle.style.zIndex = '10000';
-            
-            document.body.appendChild(particle);
-            
-            // 随机方向和速度
-            const angle = Math.random() * Math.PI * 2;
-            const velocity = Math.random() * 6 + 2;
-            const vx = Math.cos(angle) * velocity;
-            const vy = Math.sin(angle) * velocity;
-            
-            // 动画
-            let opacity = 1;
-            let posX = centerX;
-            let posY = centerY;
-            
-            const animate = () => {
-                posX += vx;
-                posY += vy;
-                opacity -= 0.02;
-                
-                if (opacity <= 0) {
-                    particle.remove();
-                    return;
-                }
-                
-                particle.style.left = `${posX}px`;
-                particle.style.top = `${posY}px`;
-                particle.style.opacity = opacity;
-                
-                requestAnimationFrame(animate);
-            };
-            
-            requestAnimationFrame(animate);
-        }
+    const rect = element.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'firework';
+    wrapper.style.left = cx + 'px';
+    wrapper.style.top = cy + 'px';
+    document.body.appendChild(wrapper);
+
+    const max = 30;          // 粒子上限
+    for (let i = 0; i < max; i++) {
+        const p = document.createElement('div');
+        p.className = 'firework-particle';
+
+        // 随机颜色
+        p.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 60%)`;
+
+        // 随机终点（±60 px 圆内）
+        const angle = Math.random() * 2 * Math.PI;
+        const dist = 30 + Math.random() * 30;
+        p.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+        p.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+
+        wrapper.appendChild(p);
+    }
+
+    // 800 ms 后自动清理
+    setTimeout(() => wrapper.remove(), 800);
     }
 
     // 检测系统主题偏好

@@ -906,27 +906,26 @@ body {
 
 @media (max-width: 768px) {
   .main-buttons {
-    flex-direction: column;
-    gap: var(--space-sm);
-    width: 90%;
-    max-width: 300px;
-  }
-}
+    position: fixed;
+    bottom: var(--space-xl);
+    left: 50%;
+    transform: translateX(-50%);
 
-.main-btn {
-  padding: var(--space-sm) var(--space-md);
-  background-color: rgb(var(--color-primary));
-  color: white;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-  border: none;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  transition: all var(--transition-normal);
-  will-change: transform, box-shadow;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    display: inline-flex; /* ✅ 容器宽度由内容撑开 */
+    flex-direction: row;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(var(--color-bg) / 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .main-btn {
+    flex-shrink: 0; /* ✅ 禁止被压缩 */
+    white-space: nowrap; /* ✅ 禁止文字换行 */
+    min-width: fit-content; /* ✅ 保证按钮宽度由内容决定 */
+  }
 }
 
 .main-btn:hover {
@@ -1170,6 +1169,7 @@ footer::before {
 }
 
 /* 封面区域 */
+/* ========= 1. 基础容器 ========= */
 .hero {
   position: relative;
   width: 100%;
@@ -1178,45 +1178,55 @@ footer::before {
   place-content: center;
   text-align: center;
   padding: var(--space-xl);
-  color: white;
-  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
-              url('https://i.postimg.cc/SK4qsK1S/Lzh10-20250713-224401.png') center/cover no-repeat;
-  isolation: isolate;
-  overflow: hidden;
-  margin: 0;
+  color: #fff;
+  overflow: hidden;         /* 让放大后的模糊图不会溢出滚动条 */
+  isolation: isolate;       /* 形成新的堆叠上下文 */
 }
 
-@media (max-width: 768px) {
-  .hero {
-    padding: var(--space-lg);
-    min-height: 100vh;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: scroll;
-  }
+/* ========= 2. 背景图片层（清晰） ========= */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("https://i.postimg.cc/SK4qsK1S/Lzh10-20250713-224401.png")
+              center/cover no-repeat;
+  z-index: -1;              /* 位于模糊层之上 */
 }
 
-[data-theme="dark"] .hero {
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-              url('https://i.postimg.cc/SK4qsK1S/Lzh10-20250713-224401.png') center/cover no-repeat;
+/* ========= 3. 模糊拓展层 ========= */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: -20%;              /* 上下左右各多 20%，可自行调节 */
+  background: url("https://i.postimg.cc/SK4qsK1S/Lzh10-20250713-224401.png")
+              center/cover no-repeat;
+  filter: blur(40px);       /* 微信常用 35~45px，可微调 */
+  transform: scale(1.25);   /* 放大一点，让模糊边缘完全覆盖视口 */
+  z-index: -2;              /* 放在最底下 */
 }
 
-.hero h1 {
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+/* ========= 4. 顶部渐变遮罩（保证文字可读） ========= */
+.hero-mask {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.5) 0%,
+      rgba(0, 0, 0, 0.35) 50%,
+      rgba(0, 0, 0, 0.5) 100%
+  );
+  z-index: 0;               /* 介于文字与图片之间 */
 }
 
-.hero p {
-  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
-}
-
+/* ========= 5. 文字样式（保持不变） ========= */
 .hero h1 {
   font-size: clamp(2rem, 5vw, 3.5rem);
   margin-block-end: var(--space-md);
   font-weight: 800;
   line-height: 1.15;
-  text-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
   z-index: 2;
+  position: relative;
 }
 
 .hero p {
@@ -1224,8 +1234,86 @@ footer::before {
   max-width: 680px;
   margin-block-end: var(--space-xl);
   opacity: 0.92;
-  z-index: 2;
   font-weight: 300;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
+  z-index: 2;
+  position: relative;
+}
+
+/* ========= 6. 响应式微调 ========= */
+@media (max-width: 768px) {
+  .hero {
+    padding: var(--space-lg);
+  }
+}
+
+/* 暗黑模式加深遮罩 */
+[data-theme="dark"] .hero-mask {
+  background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.65) 0%,
+      rgba(0, 0, 0, 0.45) 50%,
+      rgba(0, 0, 0, 0.65) 100%
+  );
+}
+
+/* 玻璃漂浮外壳 */
+.glass-floats{
+  position:absolute;
+  inset:0;
+  perspective:1000px;
+  overflow:hidden;
+  z-index:-1;
+}
+
+/* 玻璃块本体 */
+.glass-floats i {
+  position: absolute;
+  width: calc(var(--w) * 1px);
+  height: calc(var(--h) * 1px);
+  left: var(--x);
+  top: var(--y);
+  border-radius: var(--r);
+  background: rgba(255 255 255 / .08);
+  border: 1px solid rgba(255 255 255 / .25);
+  box-shadow: 0 8px 20px rgba(255 255 255 / .12);
+  /* 移除 overflow:hidden - 关键修复 */
+  transform-style: preserve-3d;
+  animation: floatGlass 12s ease-in-out infinite;
+  animation-delay: var(--delay);
+  /* 新增隔离层叠上下文 */
+  isolation: isolate; /* 修复层叠问题 */
+}
+
+.glass-floats i::before {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  background: inherit;
+  border-radius: inherit;
+  filter: blur(12px) contrast(110%) saturate(120%);
+  transform: scale(1.12);
+  opacity: .65; /* 提高可见度 */
+  z-index: -1;
+  mix-blend-mode: overlay;
+  /* 添加边缘光增强 */
+  box-shadow: 
+    inset 0 0 15px rgba(255, 255, 255, 0.3),
+    inset 0 0 30px rgba(255, 255, 255, 0.2); /* 增强边缘效果 */
+}
+
+[data-theme="dark"] .glass-floats i {
+  background: rgba(255 255 255 / .05);
+  border-color: rgba(255 255 255 / .18);
+}
+
+/* 真正漂浮的 3D 摇摆 */
+@keyframes floatGlass{
+  0%   {transform:translateY(0)   rotateX(0)   rotateY(0);}
+  25%  {transform:translateY(-18px) rotateX(4deg) rotateY(6deg);}
+  50%  {transform:translateY(-6px)  rotateX(-3deg) rotateY(-5deg);}
+  75%  {transform:translateY(-22px) rotateX(2deg) rotateY(4deg);}
+  100% {transform:translateY(0)   rotateX(0)   rotateY(0);}
 }
 
 /* 控制按钮 */
@@ -1291,13 +1379,27 @@ footer::before {
 }
 
 /* 烟花效果 */
-.firework-particle {
+.firework {
   position: fixed;
   pointer-events: none;
   z-index: 10000;
+}
+
+.firework-particle {
+  position: absolute;
+  width: 4px;          /* 统一 4 px 圆点 */
+  height: 4px;
   border-radius: 50%;
-  box-shadow: 0 0 6px 2px currentColor;
-  will-change: transform, opacity;
+  opacity: 1;
+  /* 关键帧：800 ms 飞出 + 淡出 */
+  animation: burst 800ms ease-out forwards;
+}
+
+@keyframes burst {
+  to {
+    transform: translate(var(--dx), var(--dy));
+    opacity: 0;
+  }
 }
 
 /* 水波纹效果 */
