@@ -1172,34 +1172,34 @@ footer::before {
 /* 封面区域 */
 .hero {
   position: relative;
-  width: 100vw;
+  width: 100%;
   min-height: 100vh;
   display: grid;
   place-content: center;
   text-align: center;
   padding: var(--space-xl);
   color: white;
-  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4)), 
-              url('https://media.moddb.com/cache/images/downloads/1/214/213946/thumb_620x2000/LOGO3.3.jpg') center/cover no-repeat;
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+              url('https://i.postimg.cc/SK4qsK1S/Lzh10-20250713-224401.png') center/cover no-repeat;
   isolation: isolate;
   overflow: hidden;
-  background-attachment: fixed;
-  margin-left: calc(-50vw + 50%);
-  left: 0;
-  right: 0;
+  margin: 0;
 }
 
 @media (max-width: 768px) {
   .hero {
     padding: var(--space-lg);
-    min-height: 75vh;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
   }
 }
 
 [data-theme="dark"] .hero {
-  background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.5)), 
-              url('https://media.moddb.com/cache/images/downloads/1/214/213946/thumb_620x2000/LOGO3.3.jpg') center/cover no-repeat;
-  background-attachment: fixed;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+              url('https://i.postimg.cc/SK4qsK1S/Lzh10-20250713-224401.png') center/cover no-repeat;
 }
 
 .hero h1 {
@@ -1304,9 +1304,12 @@ footer::before {
 .global-ripple {
   position: fixed;
   border-radius: 100%;
-  background-color: rgba(53, 167, 250, 0.6);
-  backdrop-filter: blur(20px);
-  transform: scale(0);
+  background-color: rgba(53, 167, 250, 0.4);
+  box-shadow:
+    0 0 10px rgba(53, 167, 250, 0.6),
+    0 0 20px rgba(53, 167, 250, 0.4),
+    0 0 40px rgba(53, 167, 250, 0.2);
+  transform: translate(-50%, -50%) scale(0);
   pointer-events: none;
   width: 20px;
   height: 20px;
@@ -1314,6 +1317,7 @@ footer::before {
   left: var(--mouseX);
   animation: rippleEffect 0.5s ease-out;
   z-index: 9999;
+  will-change: transform, opacity;
 }
 
 @keyframes rippleEffect {
@@ -1578,50 +1582,52 @@ footer::before {
   border-radius: 12px;
 }
 
-@keyframes widthExpand {
-  0% { width: 42px; }
-  20% { width: 80px; }
-  40% { width: 160px; }
-  60% { width: 240px; }
-  80% { width: 270px; }
-  100% { width: 280px; }
+@keyframes navExpand {
+  0% { 
+    transform: scale(1) translateX(0);
+    width: 42px;
+    height: 42px;
+    opacity: 1;
+  }
+  30% {
+    transform: scale(1.05) translateX(-5px);
+  }
+  100% { 
+    transform: scale(1) translateX(0);
+    width: 280px;
+    height: auto;
+    max-height: 80vh;
+    opacity: 1;
+  }
 }
 
-@keyframes heightExpand {
-  0% { height: 42px; }
-  20% { height: 80px; }
-  40% { height: 120px; }
-  60% { height: auto; max-height: 90vh; }
-  80% { height: auto; max-height: 85vh; }
-  100% { height: auto; max-height: 80vh; }
+@keyframes navCollapse {
+  0% { 
+    transform: scale(1) translateX(0);
+    width: 280px;
+    height: auto;
+    opacity: 1;
+  }
+  70% {
+    transform: scale(0.98) translateX(5px);
+  }
+  100% { 
+    transform: scale(1) translateX(0);
+    width: 42px;
+    height: 42px;
+    opacity: 1;
+  }
 }
 
-@keyframes scaleExpand {
-  0% { transform: scale(1); }
-  30% { transform: scale(1.05) rotate(2deg); }
-  70% { transform: scale(0.98) rotate(-1deg); }
-  100% { transform: scale(1); }
+.nav-container {
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1.5);
+  visibility: hidden;
 }
 
-@keyframes widthCollapse {
-  0% { width: 280px; }
-  30% { width: 200px; }
-  70% { width: 80px; }
-  100% { width: 42px; }
-}
-
-@keyframes heightCollapse {
-  0% { height: auto; max-height: 80vh; }
-  30% { height: 120px; }
-  70% { height: 60px; }
-  100% { height: 42px; }
-}
-
-@keyframes scaleCollapse {
-  0% { transform: scale(1); }
-  30% { transform: scale(0.98) rotate(-2deg); }
-  70% { transform: scale(1.02) rotate(1deg); }
-  100% { transform: scale(1); }
+.nav-container.expanded,
+.nav-container:not(.expanded) {
+  visibility: visible;
 }
 
 /* 菜单项动画优化 */
@@ -1842,7 +1848,9 @@ footer::before {
 footer {
   padding: var(--space-2xl) 0;
   text-align: center;
-  background-color: rgb(var(--color-bg));
+  background-color: rgba(var(--color-bg) / 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   position: relative;
   overflow: hidden;
   border-top: 1px solid rgb(var(--color-primary) / 0.2);
@@ -1850,6 +1858,7 @@ footer {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  z-index: 1;
 }
 
 footer > * {

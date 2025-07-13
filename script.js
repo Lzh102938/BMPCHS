@@ -99,9 +99,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // 确保初始状态
-    navContainer.style.opacity = '0';
-    navContainer.style.pointerEvents = 'none';
+    // 确保初始状态 (已在CSS中设置)
+    navContainer.style.opacity = '1';
+    navContainer.style.pointerEvents = 'auto';
 });
 
 function initPage() {
@@ -387,11 +387,15 @@ function initPage() {
 document.addEventListener('click', (e) => {
   const ripple = document.createElement('div');
   ripple.className = 'global-ripple';
-  
-  // 正确设置鼠标位置变量
-  ripple.style.setProperty('--mouseX', `${e.clientX}px`);
-  ripple.style.setProperty('--mouseY', `${e.clientY}px`);
-  
+
+  // 设置水波纹中心点为鼠标点击位置
+  const size = 20; // 与CSS中width/height一致
+  ripple.style.setProperty('--mouseX', `${e.clientX - size / 2}px`);
+  ripple.style.setProperty('--mouseY', `${e.clientY - size / 2}px`);
+
   document.body.appendChild(ripple);
-  ripple.addEventListener('animationend', () => ripple.remove());
+
+  ripple.addEventListener('animationend', () => {
+    ripple.remove();
+  });
 });
