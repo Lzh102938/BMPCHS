@@ -64,16 +64,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 切换导航栏状态
     navToggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        navToggle.classList.toggle('expanded');
-        navContainer.classList.toggle('expanded');
-        
-        // 添加/移除动画类
-        if (navContainer.classList.contains('expanded')) {
-            navContainer.classList.add('animate-expand');
-        } else {
-            navContainer.classList.add('animate-collapse');
-        }
+    e.stopPropagation();
+    navToggle.classList.toggle('expanded');
+    navContainer.classList.toggle('expanded');
+    
+    if (navContainer.classList.contains('expanded')) {
+        navContainer.classList.add('animate-expand');
+    } else {
+        navContainer.classList.add('animate-collapse');
+    }
     });
 
     // 动画结束处理
@@ -83,20 +82,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 点击其他地方关闭导航栏
     document.addEventListener('click', (e) => {
-        if (!navContainer.contains(e.target) && e.target !== navToggle) {
-            navToggle.classList.remove('expanded');
-            navContainer.classList.remove('expanded', 'animate-expand');
-            navContainer.classList.add('animate-collapse');
-        }
+    if (!navContainer.contains(e.target) && e.target !== navToggle) {
+        navToggle.classList.remove('expanded');
+        navContainer.classList.remove('animate-expand');
+        navContainer.classList.add('animate-collapse');
+    }
     });
 
     // 滚动时自动关闭导航栏
     window.addEventListener('scroll', () => {
-        if (navContainer.classList.contains('expanded')) {
-            navToggle.classList.remove('expanded');
-            navContainer.classList.remove('expanded', 'animate-expand');
-            navContainer.classList.add('animate-collapse');
-        }
+    if (navContainer.classList.contains('expanded')) {
+        navToggle.classList.remove('expanded');
+        navContainer.classList.remove('animate-expand');
+        navContainer.classList.add('animate-collapse');
+    }
     });
 
     // 确保初始状态 (已在CSS中设置)
@@ -226,6 +225,7 @@ function initPage() {
     navContainer.style.pointerEvents = 'auto';
     navContainer.style.transform = 'translateX(0)';
 
+
     // 填充导航项
     const navItems = [
         ...Array.from(document.querySelectorAll('h2')).map(h2 => ({
@@ -253,12 +253,16 @@ function initPage() {
     });
 
     // 导航交互
+    // 鼠标悬停展开
     navContainer.addEventListener('mouseenter', () => {
-        navContainer.classList.add('expanded');
+    navContainer.classList.remove('animate-collapse');
+    navContainer.classList.add('expanded', 'animate-expand');
     });
 
+    // 鼠标离开收起
     navContainer.addEventListener('mouseleave', () => {
-        navContainer.classList.remove('expanded');
+    navContainer.classList.remove('expanded', 'animate-expand');
+    navContainer.classList.add('animate-collapse');
     });
 
     // ================= 滚动动画 =================
