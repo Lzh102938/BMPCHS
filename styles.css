@@ -1,5 +1,9 @@
 /* ==================== 现代CSS重置与基础样式 ==================== */
 :root {
+  /* 头图背景图片 */
+  --hero-image-light: url("https://i.postimg.cc/g0yksFCk/76935e80-b12b-415e-8ee0-26763f6ea2d6.png"); /* 默认亮色主题图片 */
+  --hero-image-dark: url("https://i.postimg.cc/LXN4dk4c/24e01ac6-280e-44aa-800e-79235204e005.png"); /* 暗色主题图片 */
+
   /* 颜色变量 */
   --color-primary: 59 130 246; /* #3b82f6 */
   --color-primary-light: 96 165 250; /* #60a5fa */
@@ -1188,9 +1192,13 @@ footer::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: url("https://i.postimg.cc/SK4qsK1S/Lzh10-20250713-224401.png")
-              center/cover no-repeat;
+  background: var(--hero-image-light) center/cover no-repeat;
   z-index: -1;              /* 位于模糊层之上 */
+}
+
+/* 暗色主题背景图 */
+[data-theme="dark"] .hero::before {
+  background: var(--hero-image-dark) center/cover no-repeat;
 }
 
 /* ========= 3. 模糊拓展层 ========= */
@@ -1198,8 +1206,15 @@ footer::before {
   content: "";
   position: absolute;
   inset: -20%;              /* 上下左右各多 20%，可自行调节 */
-  background: url("https://i.postimg.cc/SK4qsK1S/Lzh10-20250713-224401.png")
-              center/cover no-repeat;
+  background: var(--hero-image-light) center/cover no-repeat;
+  filter: blur(40px);       /* 微信常用 35~45px，可微调 */
+  transform: scale(1.25);   /* 放大一点，让模糊边缘完全覆盖视口 */
+  z-index: -2;              /* 放在最底下 */
+}
+
+/* 暗色主题模糊层背景图 */
+[data-theme="dark"] .hero::after {
+  background: var(--hero-image-dark) center/cover no-repeat;
   filter: blur(40px);       /* 微信常用 35~45px，可微调 */
   transform: scale(1.25);   /* 放大一点，让模糊边缘完全覆盖视口 */
   z-index: -2;              /* 放在最底下 */
@@ -1724,9 +1739,6 @@ footer::before {
   border-inline-start-color: rgb(var(--color-primary));
 }
 
-.nav-container.expanded {
-  background-color: rgb(var(--color-bg) / 0.9);
-}
 .neon-footer {
   padding: var(--space-xl);
   background: linear-gradient(135deg, rgba(var(--color-primary), 0.1) 0%, rgba(var(--color-primary-light), 0.1) 100%);
