@@ -324,8 +324,11 @@ code:not(pre code) {
   word-break: break-word;
   position: relative;
   overflow: hidden;
-  user-select: text;
-  -webkit-user-select: text;
+  user-select: all;
+  -webkit-user-select: all;
+  -moz-user-select: all;
+  -ms-user-select: all;
+  cursor: text;
 }
 
 /* 内联代码悬停效果 */
