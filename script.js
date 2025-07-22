@@ -233,7 +233,7 @@ function initPage() {
             anchor: h2.id
         })),
         { text: '<i class="fa-solid fa-download"></i>下载补丁', anchor: 'download' },
-        { text: '<i class="fa-solid fa-globe"></i>源代码', anchor: 'source' }
+        { text: '<i class="fa-solid fa-code"></i>源代码', anchor: 'source' }
     ];
 
     const navList = navContainer.querySelector('.nav-vertical');
