@@ -900,7 +900,7 @@ body {
   align-items: center;
   gap: var(--space-xs);
   border: none;
-  border-radius: var(--radius-lg);
+  border-radius: clamp(0.75rem, 0.5rem + 0.5vw, 1.25rem);
   box-shadow: var(--shadow-md);
   transition: all var(--transition-normal);
   will-change: transform, box-shadow;
