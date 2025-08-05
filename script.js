@@ -1,4 +1,31 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // 直接显示指定的HTML内容
+    const h1Element = document.querySelector('h1');
+    if (h1Element) {
+        h1Element.innerHTML = '<span style="display:inline-block;transition:all 0.3s ease, text-shadow 0.3s ease;margin:0 2px;">大</span><span style="display:inline-block;transition:all 0.3s ease, text-shadow 0.3s ease;margin:0 2px;">型</span><span style="display:inline-block;transition:all 0.3s ease, text-shadow 0.3s ease;margin:0 2px;">任</span><span style="display:inline-block;transition:all 0.3s ease, text-shadow 0.3s ease;margin:0 2px;">务</span><span style="display:inline-block;transition:all 0.3s ease, text-shadow 0.3s ease;margin:0 2px;">包</span><span style="display:inline-block;transition:all 0.3s ease, text-shadow 0.3s ease;margin:0 2px;">最</span><span style="display:inline-block;transition:all 0.3s ease, text-shadow 0.3s ease;margin:0 2px;">终</span><span style="display:inline-block;transition:all 0.3s ease, text-shadow 0.3s ease;margin:0 2px;">版</span><br><span style="display:inline-block;transition:all 0.3s ease, text-shadow 0.3s ease;margin:0 2px;">中</span><span style="display:inline-block;transition:all 0.3s ease, text-shadow 0.3s ease;margin:0 2px;">文</span><span style="display:inline-block;transition:all 0.3s ease, text-shadow 0.3s ease;margin:0 2px;">化</span><span style="display:inline-block;transition:all 0.3s ease, text-shadow 0.3s ease;margin:0 2px;">计</span><span style="display:inline-block;transition:all 0.3s ease, text-shadow 0.3s ease;margin:0 2px;">划</span>';
+        
+        // 为每个span添加动画效果
+        const spans = h1Element.querySelectorAll('span');
+        const neonColors = ['0 0 10px rgba(255,100,255,0.7)', '0 0 10px rgba(100,255,255,0.7)', '0 0 10px rgba(255,255,100,0.7)'];
+        
+        spans.forEach((span, index) => {
+            const originalShadow = window.getComputedStyle(span).textShadow;
+            
+            span.addEventListener('mouseenter', () => {
+                span.style.transform = 'scale(1.5)';
+                span.style.margin = '0 10px';
+                span.style.zIndex = '1';
+                span.style.textShadow = `${originalShadow}, ${neonColors[index % neonColors.length]}`;
+            });
+            
+            span.addEventListener('mouseleave', () => {
+                span.style.transform = 'scale(1)';
+                span.style.margin = '0 2px';
+                span.style.zIndex = '0';
+                span.style.textShadow = originalShadow;
+            });
+        });
+    }
     // 确保DOM已完全加载
     if (document.readyState === 'complete') {
         initPage();
